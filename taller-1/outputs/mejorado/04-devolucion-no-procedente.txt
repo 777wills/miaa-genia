@@ -1,0 +1,17 @@
+Consulta: 04-devolucion-no-procedente.txt
+Configuración: settings-final.toml
+Modelo: gemini-3.6-flash · temperatura: 0
+--------------------------------------------------------------------------------
+¡Hola, Hernán! Con gusto reviso la solicitud para tu pedido ECO-2026-1372.
+
+Evaluando cada producto según nuestra política de devoluciones:
+
+- **Tote bag de lona reciclada**: Sí procede la devolución al ser de la categoría Textiles y encontrarse sin uso. Te generaremos una guía prepagada gratuita para que la entregues en la transportadora. El reembolso se emitirá entre 5 y 10 días hábiles después de la revisión en bodega.
+- **Café de origen**: No admite devolución por pertenecer a la categoría de alimentos perecederos, ya que debemos garantizar la inocuidad alimentaria.
+- **Desodorante natural**: Tampoco admite devolución por razones sanitarias al haber sido destapado, al ser un artículo de higiene personal.
+
+Lamento que el café y el desodorante no hayan sido de tu agrado. Si alguno de estos productos presenta un defecto de fabricación o llegó averiado, avísame para aplicarte la excepción correspondiente con una fotografía.
+
+Dime si deseas que procedamos con la guía de devolución de la tote bag y quedo atenta para ayudarte.
+
+Clasificación: RESUELTO_POR_ASISTENTE

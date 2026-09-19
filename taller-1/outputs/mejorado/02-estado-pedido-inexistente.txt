@@ -1,0 +1,11 @@
+Consulta: 02-estado-pedido-inexistente.txt
+Configuración: settings-final.toml
+Modelo: gemini-3.6-flash · temperatura: 0
+--------------------------------------------------------------------------------
+¡Hola! Entiendo tu urgencia al tratarse de un regalo.
+
+Revisé en nuestro sistema y el número de seguimiento ECO-2026-9999 no existe en los registros de EcoMarket. Te pido por favor que verifiques el código en el correo electrónico de confirmación que recibiste al hacer tu compra para validar que los números sean correctos.
+
+Quedo muy atenta a tu respuesta para ayudarte a rastrearlo de inmediato en cuanto tengas el número correcto.
+
+Clasificación: RESUELTO_POR_ASISTENTE

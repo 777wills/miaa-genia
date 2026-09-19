@@ -1,0 +1,11 @@
+Consulta: 02-estado-pedido-inexistente.txt
+Configuración: settings.toml
+Modelo: gemini-3.6-flash · temperatura: 0.7
+--------------------------------------------------------------------------------
+Hola. Hemos verificado en nuestro sistema con el número de seguimiento **ECO-2026-9999**, pero lamentablemente **no encontramos ningún pedido registrado** con esa referencia.
+
+Por favor, te sugerimos:
+1. **Verificar el número de seguimiento** en el correo de confirmación de tu compra para asegurarte de que no haya algún dígito diferente.
+2. Si estás seguro de que el número es correcto o deseas que lo busque manualmente, indícanos el **nombre completo**, **correo electrónico** o **cédula/documento de identidad** con el que realizaste la compra.
+
+Quedamos muy atentos a tus datos para ayudarte a ubicar tu regalo lo antes posible.

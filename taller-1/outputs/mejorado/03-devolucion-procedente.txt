@@ -1,0 +1,18 @@
+Consulta: 03-devolucion-procedente.txt
+Configuración: settings-final.toml
+Modelo: gemini-3.6-flash · temperatura: 0
+--------------------------------------------------------------------------------
+¡Hola! Con gusto te ayudo con la devolución de las dos camisetas de algodón orgánico de tu pedido ECO-2026-1042.
+
+Al ser productos de la categoría Textiles que se encuentran sin uso y con sus etiquetas adheridas, la devolución procede perfectamente ya que está dentro de los 30 días posteriores a la entrega.
+
+El proceso para realizar la devolución es el siguiente:
+
+1. Generamos tu número de caso de devolución y la guía prepagada de retorno, la cual no tiene ningún costo para ti.
+2. Empacas las prendas y entregas el paquete en el punto de la transportadora.
+3. Al recibir el paquete en bodega, se realiza una revisión que toma hasta 3 días hábiles.
+4. Una vez revisado, el reembolso se emite a tu medio de pago original en un lapso de 5 a 10 días hábiles.
+
+Por favor confírmame si deseas que iniciemos el proceso para enviarte la guía de retorno. Quedo atenta a tu respuesta.
+
+Clasificación: RESUELTO_POR_ASISTENTE

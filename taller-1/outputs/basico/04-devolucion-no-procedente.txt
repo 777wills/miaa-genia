@@ -1,0 +1,23 @@
+Consulta: 04-devolucion-no-procedente.txt
+Configuración: settings.toml
+Modelo: gemini-3.6-flash · temperatura: 0.7
+--------------------------------------------------------------------------------
+Buenos días, Hernán. Con gusto te ayudamos con la revisión de tu pedido **ECO-2026-1372**. 
+
+De acuerdo con nuestras políticas de devolución e higiene, a continuación te detallamos el estado de cada uno de los productos que deseas devolver:
+
+1. **Tote bag de lona reciclada ($65.750):** 
+   * **Aprobado para devolución y reembolso.** Al encontrarse nueva, sin uso y en su empaque original, cumple completamente con los requisitos. Te reembolsaremos el valor total de este producto ($65.750).
+
+2. **Café de origen tostado en grano 500 g ($48.100):**
+   * **No aplica para devolución.** Por normas de salubridad y regulación de alimentos perecederos, no es posible aceptar devoluciones ni realizar reembolsos de productos alimenticios que ya han sido abiertos o probados por preferencia de sabor.
+
+3. **Desodorante natural en barra ($29.350):**
+   * **No aplica para devolución.** Por motivos de higiene y protección de la salud, los artículos de higiene personal que ya han sido destapados o utilizados no pueden ser devueltos.
+
+---
+
+### ¿Cómo proceder con la devolución de la Tote Bag?
+Podemos generarte una **guía de retorno gratuita** para que envíes la *Tote bag* a nuestro centro de distribución. Una vez recibamos el paquete y verifiquemos su estado, realizaremos el reembolso de los **$65.750** a la forma de pago utilizada o a la cuenta que nos indiques.
+
+Por favor confírmanos si deseas que generemos la guía de devolución para la Tote bag para enviártela de inmediato. ¡Quedamos atentos a tu respuesta!

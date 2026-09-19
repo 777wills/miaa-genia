@@ -1,0 +1,25 @@
+Consulta: 05-escalamiento-a-humano.txt
+Configuración: settings.toml
+Modelo: gemini-3.6-flash · temperatura: 0.7
+--------------------------------------------------------------------------------
+Hola, Paola. 
+
+Entiendo perfectamente tu molestia y te pido una sincera disculpa por la falta de respuesta oportuna y por los inconvenientes que pasaste durante tu viaje a causa de la falla con el cargador solar portátil de tu pedido **ECO-2026-1235**. Tienes toda la razón en estar inconforme; esta situación no refleja el servicio ni la calidad que debemos ofrecerte en EcoMarket.
+
+Quiero ayudarte a resolver todo hoy mismo. He tomado tu caso de forma prioritaria y procedo a darte solución a ambos puntos:
+
+### 1. Garantía del producto defectuoso
+Tenemos registrado el reporte del funcionamiento intermitente de tu **Cargador solar portátil 10 W**. Dado que el producto presenta fallas, ponemos a tu disposición dos opciones inmediatas:
+* **Generar el reembolso total** de los $159.000 COP de este producto.
+* **Enviarte una unidad totalmente nueva** con despacho prioritario y sin costo adicional.
+
+Adicionalmente, te enviaremos a tu correo electrónico una guía de retornos prepagada de EnvíaVerde para que puedas devolver el cargador defectuoso cuando te sea conveniente, sin asumir ningún costo de envío.
+
+### 2. Verificación del cobro duplicado
+He escalado de inmediato este reporte al departamento financiero. Estamos auditando los registros de pago asociados a la orden **ECO-2026-1235** para verificar el cobro en tu tarjeta de crédito. Tan pronto confirmemos la transacción duplicada, procesaremos la reversión inmediata de los fondos a tu entidad bancaria y te enviaremos el comprobante del trámite hoy mismo.
+
+---
+
+Por favor, respóndeme a este mensaje indicándome **si prefieres la devolución del dinero o la reposición del producto**, para proceder de inmediato con la gestión. 
+
+Estaré al frente de tu caso de manera directa para asegurarme de que recibas la confirmación y los soportes correspondientes en el transcurso del día. Nuevamente, lamento mucho los contratiempos ocasionados.

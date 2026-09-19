@@ -1,0 +1,15 @@
+# Configuración inicial: prompt básico, sin rol, sin instrucciones detalladas y sin
+# recuperación selectiva. Sirve como línea base para medir el efecto de la ingeniería de prompts.
+
+[general]
+modelo = "gemini-3.6-flash"
+temperatura = 0.7
+recuperacion = "completa"
+incluir_politica = false
+
+[prompts]
+role_prompt = ""
+
+instruction_prompt = """
+Responde la consulta del cliente.
+"""

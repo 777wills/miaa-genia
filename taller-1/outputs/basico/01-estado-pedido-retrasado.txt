@@ -1,0 +1,18 @@
+Consulta: 01-estado-pedido-retrasado.txt
+Configuración: settings.toml
+Modelo: gemini-3.6-flash · temperatura: 0.7
+--------------------------------------------------------------------------------
+Hola, buenas tardes. Lamento mucho la demora con la entrega de tu paquete. 
+
+Revisando la información de tu pedido **ECO-2026-1187**, te confirmo lo siguiente:
+
+* **Estado actual:** Retrasado.
+* **Motivo del retraso:** La empresa transportadora (**LogiSostenible**) ha presentado una sobrecarga operativa debido a la alta demanda de la temporada de descuentos.
+* **Nueva fecha estimada de entrega:** **16 de marzo de 2026**.
+
+**Datos de envío y rastreo:**
+* **Transportadora:** LogiSostenible
+* **Número de guía:** `LS-2209871`
+* **Link de seguimiento:** [Rastrear pedido ECO-2026-1187](https://rastreo.ecomarket.co/ECO-2026-1187)
+
+Ofrecemos disculpas sinceras por los inconvenientes que esta reprogramación te pueda causar. Quedamos muy atentos al avance del envío para asegurarnos de que recibas tus productos lo antes posible. Si tienes alguna otra duda, estamos a tu disposición.

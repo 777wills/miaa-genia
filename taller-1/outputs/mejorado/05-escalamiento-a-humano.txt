@@ -1,0 +1,17 @@
+Consulta: 05-escalamiento-a-humano.txt
+Configuración: settings-final.toml
+Modelo: gemini-3.6-flash · temperatura: 0
+--------------------------------------------------------------------------------
+¡Hola, Paola! Lamento sinceramente la mala experiencia que has tenido y entiendo perfectamente tu molestia por las dificultades con tu pedido ECO-2026-1235.
+
+Debido a que tu solicitud involucra el reporte de falla en el cargador solar portátil, la revisión de un cobro duplicado y la atención a tus mensajes previos, este caso excede mis atribuciones como asistente y requiere la atención directa de nuestro equipo.
+
+He trasladado de inmediato tu caso con carácter prioritario a un agente humano especializado, detallando los siguientes aspectos para su atención urgente:
+
+- La revisión por garantía del cargador solar portátil de 10 W.
+- La verificación del cobro duplicado en la pasarela de pago para su corrección.
+- La revisión de la falta de respuesta previa.
+
+Un agente de nuestro equipo retomará tu caso y te contactará a la brevedad por este mismo canal para darte una respuesta y solución definitiva. Agradezco tu paciencia mientras gestionamos la atención de tu requerimiento.
+
+Clasificación: REQUIERE_AGENTE_HUMANO

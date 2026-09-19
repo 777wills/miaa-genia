@@ -1,0 +1,19 @@
+Consulta: 03-devolucion-procedente.txt
+Configuración: settings.toml
+Modelo: gemini-3.6-flash · temperatura: 0.7
+--------------------------------------------------------------------------------
+Hola, Marcela. Con gusto te ayudamos a gestionar la devolución de las dos camisetas de algodón orgánico (SKU: TEX-0031) de tu pedido **ECO-2026-1042**. 
+
+Dado que los productos están sin usar y conservan sus etiquetas originales, cumplen perfectamente con las condiciones para realizar la devolución o cambio de talla.
+
+Para continuar con el proceso, estos son los pasos a seguir:
+
+1. **Confirmación de la opción deseada:** Por favor indícanos si prefieres hacer un **cambio de talla** (por ejemplo, solicitar una talla más pequeña) o si deseas la **devolución del dinero** (reembolso por $149.800 corresponiente a las dos camisetas).
+2. **Emisión de la guía de retorno:** Una vez nos confirmes tu preferencia, generaremos una **guía de retorno** con la transportadora (*EnvíaVerde*) y te la enviaremos a tu correo electrónico.
+3. **Empaque y entrega:**
+   * Guarda las dos camisetas (con sus etiquetas puestas) en una bolsa o caja bien sellada.
+   * Pega o adjunta la guía de retorno al empaque.
+   * Lleva el paquete al punto autorizado de la transportadora o entrega el paquete según la instrucción de recolección que te enviaremos.
+4. **Procesamiento:** En cuanto las prendas lleguen a nuestra bodega y se verifique su estado, realizaremos el envío de la nueva talla o procesaremos tu reembolso.
+
+Quedamos atentos a tu respuesta para generarte la guía de retorno de inmediato. ¡Quedamos a tu servicio!
