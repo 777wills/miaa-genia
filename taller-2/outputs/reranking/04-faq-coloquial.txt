@@ -1,0 +1,19 @@
+Consulta: 04-faq-coloquial.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. faq-12 (faq.json) · posición vectorial 1 · similitud 0.8464 · reranker 0.3078
+  2. faq-13 (faq.json) · posición vectorial 2 · similitud 0.8232 · reranker 0.0119
+  3. faq-01 (faq.json) · posición vectorial 9 · similitud 0.7988 · reranker 0.0012
+  4. faq-14 (faq.json) · posición vectorial 3 · similitud 0.8177 · reranker 0.0007
+--------------------------------------------------------------------------------
+¡Hola! Con gusto te explico cómo funciona el programa de puntos Semilla de EcoMarket.
+
+Por cada 1.000 pesos de compra acumulas un punto Semilla. Cada 100 puntos equivalen a 5.000 pesos de descuento en tu siguiente compra. Los puntos se acreditan únicamente cuando el pedido queda entregado, tienen una vigencia de 12 meses y solo es posible acumularlos si tienes una cuenta registrada. 
+
+Como mencionas que nos has comprado antes pero no tienes cuenta, te cuento que no es obligatorio crear una para comprar, ya que puedes hacerlo como invitado; sin embargo, las compras realizadas como invitado no permiten acumular puntos. Puedes consultar tu saldo en la sección «Mi cuenta > Puntos Semilla» si ya cuentas con un registro activo.
+
+Si necesitas ayuda con algo más, aquí estaré para asistirte.
+
+Clasificación: RESUELTO_POR_ASISTENTE

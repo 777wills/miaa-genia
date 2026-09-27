@@ -1,0 +1,19 @@
+Consulta: 06-pedido-mas-politica.txt
+Configuración: settings-sin-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · sin reranking
+Fragmentos entregados al modelo:
+  1. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 1 · similitud 0.8476
+  2. faq-16 (faq.json) · posición vectorial 2 · similitud 0.8387
+  3. politica-categorias-que-no-admiten-devolucion-1 (politica-devoluciones.md) · posición vectorial 3 · similitud 0.8240
+  4. catalogo-ali-0455 (catalogo-productos.csv) · posición vectorial 4 · similitud 0.8210
+--------------------------------------------------------------------------------
+¡Hola, Hernán! Con gusto te ayudo con tu pedido ECO-2026-1372.
+
+Lamento mucho que el café haya llegado en esas condiciones. Como se trata de un alimento perecedero, por razones sanitarias y de inocuidad normalmente no admite devolución; sin embargo, al tratarse de un producto que llegó averiado y con el empaque violado, aplica una de nuestras excepciones. 
+
+En este caso no se exige que devuelvas el café de vuelta. Puedes elegir entre la reposición del producto o el reembolso total. Para activar esta excepción, solo te solicitamos una fotografía del producto y del empaque.
+
+Quedo a la espera de la foto y de tu elección (reposición o reembolso) para gestionar tu caso con un agente humano.
+
+Clasificación: REQUIERE_AGENTE_HUMANO

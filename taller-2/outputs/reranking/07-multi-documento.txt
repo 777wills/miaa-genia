@@ -1,0 +1,19 @@
+Consulta: 07-multi-documento.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. catalogo-tex-0210 (catalogo-productos.csv) · posición vectorial 1 · similitud 0.8549 · reranker 0.8545
+  2. guia-reembolso-del-costo-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 4 · similitud 0.8378 · reranker 0.5359
+  3. guia-costos-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 14 · similitud 0.8082 · reranker 0.0405
+  4. guia-cobertura-y-zonas-de-entrega-1 (guia-envios-y-pagos.pdf) · posición vectorial 12 · similitud 0.8090 · reranker 0.0342
+--------------------------------------------------------------------------------
+¡Hola! Con gusto respondo tus dudas sobre la chaqueta y el envío.
+
+Sí es posible devolver la chaqueta si a tu hermano no le queda la talla, ya que el producto admite devolución siempre y cuando esté sin uso y con las etiquetas puestas. 
+
+Respecto al envío a Pereira, esta ciudad pertenece a la Zona 1 (ciudades principales). El costo de envío se calcula al finalizar la compra según la zona de destino y es de 9.900 pesos para la Zona 1. Sin embargo, el envío es gratuito en compras desde 150.000 pesos con destino a las zonas 1 y 2, y como el precio de la chaqueta es de 289.000 pesos, tu compra supera este monto y el envío te saldrá gratis.
+
+Si necesitas ayuda con algo más, aquí estaré para asistirte.
+
+Clasificación: RESUELTO_POR_ASISTENTE

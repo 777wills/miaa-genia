@@ -1,0 +1,21 @@
+Consulta: 01-producto-catalogo.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. catalogo-ele-0033 (catalogo-productos.csv) · posición vectorial 1 · similitud 0.8383 · reranker 0.0325
+  2. catalogo-ele-0009 (catalogo-productos.csv) · posición vectorial 2 · similitud 0.8314 · reranker 0.0175
+  3. faq-09 (faq.json) · posición vectorial 8 · similitud 0.8092 · reranker 0.0063
+  4. catalogo-ele-0047 (catalogo-productos.csv) · posición vectorial 4 · similitud 0.8214 · reranker 0.0004
+--------------------------------------------------------------------------------
+¡Hola! Qué gusto saludarte.
+
+Para tu viaje de camping donde no hay enchufes, te recomiendo el cargador solar portátil de 10 W (SKU ELE-0009). Es un panel solar plegable que cuenta con dos puertos USB y carga un celular en unas tres horas de sol directo, además de ser resistente a salpicaduras. Su precio es de $159.000 COP.
+
+Ten en cuenta que la power bank de bambú requiere enchufe para recargarse, por lo que no te funcionaría en el camping.
+
+Respecto a tu otra pregunta, todos los productos de electrónica cuentan con 12 meses de garantía desde la entrega. Las reclamaciones por garantía las atiende un agente humano, que valida el caso y define si procede reparación, cambio o reembolso. Si deseas iniciar un proceso de garantía, avísame para trasladar tu caso.
+
+Espero que disfrutes mucho tu viaje de camping. Si necesitas algo más, aquí estaré.
+
+Clasificación: RESUELTO_POR_ASISTENTE

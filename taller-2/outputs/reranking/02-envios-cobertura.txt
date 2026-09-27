@@ -1,0 +1,21 @@
+Consulta: 02-envios-cobertura.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. guia-cobertura-y-zonas-de-entrega-1 (guia-envios-y-pagos.pdf) · posición vectorial 5 · similitud 0.8220 · reranker 0.0228
+  2. guia-costos-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 1 · similitud 0.8355 · reranker 0.0170
+  3. guia-tiempos-de-alistamiento-y-entrega-1 (guia-envios-y-pagos.pdf) · posición vectorial 2 · similitud 0.8348 · reranker 0.0091
+  4. guia-retrasos-en-la-entrega-1 (guia-envios-y-pagos.pdf) · posición vectorial 13 · similitud 0.8128 · reranker 0.0025
+--------------------------------------------------------------------------------
+¡Hola! Qué gusto saludarte.
+
+Sí realizamos envíos a Leticia, ya que hace parte de nuestra Zona 3 de cobertura. 
+
+El tiempo estimado de entrega para la Zona 3 es de 6 a 10 días hábiles una vez despachado el pedido. Ten en cuenta que los pedidos pagados antes de las 12:00 m. de un día hábil se alistan ese mismo día, y los demás al día hábil siguiente. 
+
+El costo del envío para esta zona es de 24.900 pesos. 
+
+Si tienes alguna otra duda sobre nuestros envíos o productos, con gusto te ayudaré.
+
+Clasificación: RESUELTO_POR_ASISTENTE

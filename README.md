@@ -18,6 +18,7 @@ las decisiones tomadas.
 | Taller | Carpeta              | Tema                                                                          | Contenido                                                                                                                                                              |
 | ------ | -------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1      | [taller-1](taller-1) | Optimización de la atención al cliente en una empresa de comercio electrónico | Selección y justificación de un modelo de IA generativa, evaluación de fortalezas, limitaciones y riesgos éticos, e implementación de una cadena de prompts ejecutable |
+| 2      | [taller-2](taller-2) | Implementación de un sistema RAG para la atención al cliente de EcoMarket     | Selección de embeddings, reranker y base vectorial, construcción de la base de conocimiento e integración de un RAG con reranking, con experimento comparativo         |
 
 ## Organización
 

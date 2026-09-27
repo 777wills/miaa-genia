@@ -1,0 +1,19 @@
+Consulta: 05-distractor-lexico.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. guia-reembolso-del-costo-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 2 · similitud 0.8421 · reranker 0.1059
+  2. politica-proceso-de-devolucion-1 (politica-devoluciones.md) · posición vectorial 7 · similitud 0.8268 · reranker 0.0066
+  3. politica-reglas-de-comunicacion-1 (politica-devoluciones.md) · posición vectorial 9 · similitud 0.8217 · reranker 0.0066
+  4. faq-06 (faq.json) · posición vectorial 8 · similitud 0.8235 · reranker 0.0038
+--------------------------------------------------------------------------------
+¡Hola! Entiendo tu inquietud sobre el costo del envío.
+
+De acuerdo con nuestras políticas, cuando devuelves un producto porque la talla no te quedó, se reembolsa el valor del producto, pero el costo del envío original no se devuelve. El transporte de retorno de esa devolución es gratuito mediante la guía prepagada, pero el valor pagado por el envío inicial no es reembolsable en este caso. El reembolso del costo de envío solo aplica si el pedido se cancela mientras sigue en preparación, si llega averiado, incompleto o con una referencia distinta, o si la transportadora no entrega el pedido en el plazo adicional descrito en la sección 5. 
+
+Por lo tanto, lo que recibiste es correcto según lo establecido para devoluciones por cambio de talla.
+
+Espero que esta información te sea útil. Si tienes alguna otra duda, aquí estaré para ayudarte.
+
+Clasificación: RESUELTO_POR_ASISTENTE

@@ -1,0 +1,19 @@
+Consulta: 04-faq-coloquial.txt
+Configuración: settings-sin-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · sin reranking
+Fragmentos entregados al modelo:
+  1. faq-12 (faq.json) · posición vectorial 1 · similitud 0.8464
+  2. faq-13 (faq.json) · posición vectorial 2 · similitud 0.8232
+  3. faq-14 (faq.json) · posición vectorial 3 · similitud 0.8177
+  4. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 4 · similitud 0.8160
+--------------------------------------------------------------------------------
+¡Hola! Con gusto te explico cómo funciona nuestro programa de puntos Semilla. 
+
+Por cada 1.000 pesos de compra acumulas un punto Semilla, y cada 100 puntos equivalen a 5.000 pesos de descuento en tu siguiente compra. Los puntos se acreditan cuando el pedido queda entregado y vencen a los 12 meses. Ten en cuenta que solo se acumulan si realizas tus compras con una cuenta registrada.
+
+Para consultar si tienes puntos acumulados y ver tu saldo actual, puedes ingresar a «Mi cuenta > Puntos Semilla». 
+
+Espero que esta información te sea de gran utilidad. Si tienes otra consulta, aquí estoy para ayudarte.
+
+Clasificación: RESUELTO_POR_ASISTENTE

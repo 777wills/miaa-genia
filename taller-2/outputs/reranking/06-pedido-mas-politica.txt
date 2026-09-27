@@ -1,0 +1,21 @@
+Consulta: 06-pedido-mas-politica.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. faq-16 (faq.json) · posición vectorial 2 · similitud 0.8387 · reranker 0.0290
+  2. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 1 · similitud 0.8476 · reranker 0.0179
+  3. politica-plazos-generales-1 (politica-devoluciones.md) · posición vectorial 19 · similitud 0.8033 · reranker 0.0085
+  4. catalogo-ali-0455 (catalogo-productos.csv) · posición vectorial 4 · similitud 0.8210 · reranker 0.0035
+--------------------------------------------------------------------------------
+¡Hola, Hernán! Con gusto te ayudo con tu consulta sobre el pedido ECO-2026-1372.
+
+Comprendo lo que pasó con el café. Dado que el producto llegó averiado, derramado o con el empaque violado, EcoMarket responde cuando el problema es atribuible a la empresa, ofreciendo la reposición del producto o el reembolso total a tu elección. 
+
+Para tu tranquilidad, **no se exige que devuelvas alimentos ni artículos de higiene**. Tampoco tienes que mandarnos el café de vuelta. 
+
+Para activar esta excepción y continuar con tu caso, únicamente se solicita una fotografía del producto y del empaque para registrar la evidencia. 
+
+¿Prefieres que te enviemos de nuevo el café o que realicemos el reembolso total? 
+
+Clasificación: RESUELTO_POR_ASISTENTE

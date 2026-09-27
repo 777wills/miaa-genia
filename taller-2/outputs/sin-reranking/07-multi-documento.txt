@@ -1,0 +1,19 @@
+Consulta: 07-multi-documento.txt
+Configuración: settings-sin-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · sin reranking
+Fragmentos entregados al modelo:
+  1. catalogo-tex-0210 (catalogo-productos.csv) · posición vectorial 1 · similitud 0.8549
+  2. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 2 · similitud 0.8418
+  3. faq-16 (faq.json) · posición vectorial 3 · similitud 0.8378
+  4. guia-reembolso-del-costo-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 4 · similitud 0.8378
+--------------------------------------------------------------------------------
+¡Hola! Con mucho gusto te respondo sobre la chaqueta de poliéster reciclado (SKU TEX-0210).
+
+Sí admite devolución si no le queda la talla, siempre que esté sin uso y con sus etiquetas. El transporte de retorno de esas devoluciones es gratuito mediante la guía prepagada. Cuando el cliente devuelve un producto porque la talla no le quedó, se reembolsa el valor del producto, pero no se reembolsa el costo del envío original.
+
+Sobre tu segunda pregunta acerca del costo del envío a Pereira, en los fragmentos de conocimiento que tengo disponibles no se mencionan las tarifas ni los costos de envío para ciudades específicas, por lo que no puedo confirmarte si tiene costo.
+
+Si tienes otra duda sobre este producto, con gusto te ayudaré.
+
+Clasificación: RESUELTO_POR_ASISTENTE

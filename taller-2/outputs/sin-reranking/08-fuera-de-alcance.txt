@@ -1,0 +1,17 @@
+Consulta: 08-fuera-de-alcance.txt
+Configuración: settings-sin-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · sin reranking
+Fragmentos entregados al modelo:
+  1. faq-01 (faq.json) · posición vectorial 1 · similitud 0.8555
+  2. faq-20 (faq.json) · posición vectorial 2 · similitud 0.8511
+  3. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 3 · similitud 0.8453
+  4. guia-presentacion-1 (guia-envios-y-pagos.pdf) · posición vectorial 4 · similitud 0.8431
+--------------------------------------------------------------------------------
+¡Hola! Gracias por escribirnos y por tu interés en EcoMarket. 
+
+Lamentablemente, no cuento con información en este momento sobre cómo registrarse como proveedor ni sobre las comisiones que cobramos. Los fragmentos disponibles solo detallan información sobre cuentas, compras corporativas y políticas de devoluciones, por lo que no puedo responder a tu solicitud sobre alianzas con proveedores.
+
+Si tienes alguna otra duda sobre nuestros productos, envíos o programa de puntos, estaré encantada de ayudarte.
+
+Clasificación: SIN_INFORMACION_DISPONIBLE

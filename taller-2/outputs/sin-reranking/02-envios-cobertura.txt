@@ -1,0 +1,21 @@
+Consulta: 02-envios-cobertura.txt
+Configuración: settings-sin-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · sin reranking
+Fragmentos entregados al modelo:
+  1. guia-costos-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 1 · similitud 0.8355
+  2. guia-tiempos-de-alistamiento-y-entrega-1 (guia-envios-y-pagos.pdf) · posición vectorial 2 · similitud 0.8348
+  3. faq-06 (faq.json) · posición vectorial 3 · similitud 0.8254
+  4. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 4 · similitud 0.8227
+--------------------------------------------------------------------------------
+¡Hola! Buenas tardes. Con gusto te explico los detalles sobre los envíos a tu zona.
+
+El costo del envío se calcula al finalizar la compra según la zona de destino: la Zona 1 tiene un costo de 9.900 pesos, la Zona 2 de 14.900 pesos y la Zona 3 de 24.900 pesos. Además, los pedidos que incluyen alimentos perecederos viajan en empaque térmico compostable, con un recargo fijo de 5.000 pesos por pedido.
+
+Una vez despachado el pedido, el tiempo de entrega estimado para la Zona 3 es de 6 a 10 días hábiles. 
+
+No tengo información en mis registros sobre a cuál zona exacta corresponde Leticia, Amazonas, por lo que no puedo confirmarte la tarifa exacta ni el tiempo específico para tu localidad. Si puedes verificar a qué zona pertenece tu destino al finalizar la compra, podrás ver el valor correspondiente.
+
+Espero que esta información te sea de utilidad. Si tienes otra duda sobre nuestros productos, envíos o medios de pago, con gusto te ayudaré.
+
+Clasificación: RESUELTO_POR_ASISTENTE

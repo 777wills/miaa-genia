@@ -1,0 +1,15 @@
+Consulta: 05-distractor-lexico.txt
+Configuración: settings-sin-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · sin reranking
+Fragmentos entregados al modelo:
+  1. politica-excepciones-que-siempre-aplican-1 (politica-devoluciones.md) · posición vectorial 1 · similitud 0.8478
+  2. guia-reembolso-del-costo-de-envio-1 (guia-envios-y-pagos.pdf) · posición vectorial 2 · similitud 0.8421
+  3. guia-pagos-rechazados-y-cobros-duplicados-1 (guia-envios-y-pagos.pdf) · posición vectorial 3 · similitud 0.8325
+  4. politica-situaciones-que-requieren-intervencion-de-un-agente-humano-1 (politica-devoluciones.md) · posición vectorial 4 · similitud 0.8293
+--------------------------------------------------------------------------------
+¡Hola! Es totalmente normal. Cuando devuelves un producto porque la talla no te quedó o porque cambiaste de opinión, se te reembolsa el valor del producto, pero el costo del envío original no se incluye. 
+
+Si tienes otra duda o necesitas ayuda con algo más, aquí estaré para asistirte.
+
+Clasificación: RESUELTO_POR_ASISTENTE

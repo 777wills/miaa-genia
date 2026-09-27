@@ -1,0 +1,17 @@
+Consulta: 08-fuera-de-alcance.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. guia-pagos-a-cuotas-1 (guia-envios-y-pagos.pdf) · posición vectorial 11 · similitud 0.8259 · reranker 0.0100
+  2. faq-20 (faq.json) · posición vectorial 2 · similitud 0.8511 · reranker 0.0092
+  3. faq-19 (faq.json) · posición vectorial 8 · similitud 0.8327 · reranker 0.0024
+  4. guia-cobertura-y-zonas-de-entrega-1 (guia-envios-y-pagos.pdf) · posición vectorial 13 · similitud 0.8242 · reranker 0.0023
+--------------------------------------------------------------------------------
+¡Hola! Gracias por escribirnos.
+
+Comprendo que te interesa registrar tu emprendimiento de jabones artesanales como proveedor en EcoMarket. Sin embargo, no cuento con información en este momento sobre cómo realizar el registro como proveedor ni sobre las comisiones que cobramos. 
+
+Si tienes alguna duda sobre nuestros envíos, medios de pago, compras corporativas o el cierre de tu cuenta, con mucho gusto puedo ayudarte con eso.
+
+Clasificación: SIN_INFORMACION_DISPONIBLE

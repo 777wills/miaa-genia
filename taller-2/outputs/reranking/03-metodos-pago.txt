@@ -1,0 +1,19 @@
+Consulta: 03-metodos-pago.txt
+Configuración: settings-reranking.toml
+Modelo: gemini-3.5-flash-lite · temperatura: 0
+Recuperación: k=20 → n=4 · reranking con BAAI/bge-reranker-v2-m3 · umbral 0.005
+Fragmentos entregados al modelo:
+  1. guia-pagos-a-cuotas-1 (guia-envios-y-pagos.pdf) · posición vectorial 1 · similitud 0.8541 · reranker 0.6562
+  2. guia-metodos-de-pago-1 (guia-envios-y-pagos.pdf) · posición vectorial 3 · similitud 0.8353 · reranker 0.3841
+  3. guia-reembolsos-al-medio-de-pago-1 (guia-envios-y-pagos.pdf) · posición vectorial 2 · similitud 0.8424 · reranker 0.2754
+  4. faq-22 (faq.json) · posición vectorial 5 · similitud 0.8201 · reranker 0.0012
+--------------------------------------------------------------------------------
+¡Hola! Claro que sí, con gusto te respondo.
+
+Sí puedes pagar con Nequi, ya que aceptamos billeteras digitales Nequi y Daviplata. También puedes pagar en efectivo en puntos Efecty con el código generado al finalizar la compra, teniendo en cuenta que el pago debe hacerse dentro de las 48 horas siguientes. 
+
+Sobre tu otra pregunta, las compras con tarjeta de crédito pueden diferirse entre 1 y 36 cuotas, según lo permita el banco emisor. EcoMarket no cobra intereses ni recargos por pagar a cuotas.
+
+Espero que esta información te sea útil. Si tienes otra duda, aquí estoy para ayudarte.
+
+Clasificación: RESUELTO_POR_ASISTENTE
