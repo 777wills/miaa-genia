@@ -24,7 +24,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import Runnable, RunnableLambda, RunnablePassthrough
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -377,6 +377,10 @@ PLANTILLA_CONSULTA = """>>>>> INICIO CONSULTA
 {consulta}
 <<<<< FIN CONSULTA"""
 
+PLANTILLA_HISTORIAL = """>>>>> INICIO HISTORIAL
+{turnos}
+<<<<< FIN HISTORIAL"""
+
 
 def cargar_configuracion(ruta: Path) -> dict[str, Any]:
     with ruta.open("rb") as archivo:
@@ -390,11 +394,27 @@ def construir_prompt(prompts: dict[str, Any]) -> ChatPromptTemplate:
         mensajes.append(HumanMessage(content=ejemplo["consulta"].strip()))
         mensajes.append(AIMessage(content=ejemplo["respuesta"].strip()))
     mensajes += [
+        MessagesPlaceholder("historial", optional=True),
         ("human", PLANTILLA_CONTEXTO),
         ("human", PLANTILLA_CONSULTA),
         HumanMessage(content=prompts["instruction_prompt"].strip()),
     ]
     return ChatPromptTemplate.from_messages(mensajes)
+
+
+def formatear_historial(
+    historial: list[tuple[str, str]], prompts: dict[str, Any]
+) -> list[HumanMessage]:
+    """Convierte los turnos previos (consulta, respuesta) en el bloque HISTORIAL y su instrucción."""
+    if not historial:
+        return []
+    turnos = "\n\n".join(
+        f"Cliente: {consulta.strip()}\nIris: {respuesta.strip()}" for consulta, respuesta in historial
+    )
+    return [
+        HumanMessage(content=PLANTILLA_HISTORIAL.format(turnos=turnos)),
+        HumanMessage(content=prompts["historial_prompt"].strip()),
+    ]
 
 
 def construir_llm(general: dict[str, Any]) -> ChatGoogleGenerativeAI:
@@ -414,10 +434,12 @@ def construir_llm(general: dict[str, Any]) -> ChatGoogleGenerativeAI:
 def construir_cadena(configuracion: dict[str, Any]) -> Runnable:
     """Arma la cadena completa: recuperar → (rerankear) → formatear → prompt → LLM → texto.
 
-    Recibe {"consulta": str} y devuelve el mismo diccionario enriquecido con los candidatos,
-    los fragmentos entregados al modelo y la respuesta.
+    Recibe {"consulta": str} y, opcionalmente, "historial" con los turnos previos como pares
+    (consulta, respuesta). Devuelve el mismo diccionario enriquecido con los candidatos, los
+    fragmentos entregados al modelo y la respuesta.
     """
     recuperacion = configuracion["recuperacion"]
+    prompts = configuracion["prompts"]
 
     recuperar = RunnableLambda(
         lambda entrada: recuperar_candidatos(entrada["consulta"], recuperacion["k_candidatos"])
@@ -434,8 +456,11 @@ def construir_cadena(configuracion: dict[str, Any]) -> Runnable:
             "conocimiento": RunnableLambda(
                 lambda entrada: formatear_conocimiento(entrada["fragmentos"])
             ),
+            "historial": RunnableLambda(
+                lambda entrada: formatear_historial(entrada.get("historial", []), prompts)
+            ),
         }
-        | construir_prompt(configuracion["prompts"])
+        | construir_prompt(prompts)
         | construir_llm(configuracion["general"])
         | StrOutputParser()
     )

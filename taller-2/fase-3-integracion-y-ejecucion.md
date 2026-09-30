@@ -8,7 +8,7 @@ recuperación
 
 ## 1. Qué construimos
 
-Llevamos a código las decisiones de las fases 1 y 2. El resultado es un asistente de línea de
+Llevamos a código las decisiones de las fases 1 y 2. Contruimos un asistente de línea de
 comandos que conserva la interfaz del Taller 1: recibe el archivo con el mensaje del cliente, un
 archivo de configuración y, opcionalmente, un archivo de salida. Por dentro, ahora ejecuta una
 cadena RAG completa.
@@ -18,6 +18,7 @@ cadena RAG completa.
 | [src/rag.py](src/rag.py)                                           | Núcleo compartido: carga y segmentación de documentos, embeddings, ChromaDB, recuperación, reranking, búsqueda exacta de pedidos, prompt y cadena LCEL |
 | [src/indexar.py](src/indexar.py)                                   | Construye el índice vectorial persistente y, con `--listar`, vuelca los fragmentos a `outputs/indice/fragmentos.md`                                    |
 | [src/app.py](src/app.py)                                           | Asistente: ejecuta la cadena para un mensaje y guarda la respuesta con la lista de fragmentos que la sustentan                                         |
+| [src/interfaz.py](src/interfaz.py)                                 | Interfaz de chat con Gradio: conversación con historial, selector de variante y panel con lo que recibió el modelo (sección 7.1)                       |
 | [src/experimento.py](src/experimento.py)                           | Mide la recuperación sin reranking y con reranking sobre 24 consultas etiquetadas                                                                      |
 | [src/settings-sin-reranking.toml](src/settings-sin-reranking.toml) | Variante A: los 4 candidatos más similares según el bi-encoder                                                                                         |
 | [src/settings-reranking.toml](src/settings-reranking.toml)         | Variante B: los 20 candidatos reordenados por el cross-encoder, con umbral de relevancia                                                               |
@@ -26,7 +27,7 @@ cadena RAG completa.
 Las dos configuraciones comparten el modelo, los prompts y los datos. Difieren solo en la sección
 `[recuperacion]`, así que cualquier diferencia en los fragmentos que recibe el modelo se debe al
 reranking. En la redacción de las respuestas influye además la variabilidad propia del modelo
-generativo (sección 8.1).
+generativo.
 
 ## 2. Los pasos del flujo RAG en nuestra implementación
 
@@ -35,8 +36,7 @@ vectorizar, indexar, recuperar, reordenar los candidatos y generar la respuesta.
 arquitectura en tres etapas que trabajamos en clase: recuperación rápida con un bi-encoder,
 reordenamiento preciso con un cross-encoder y generación con el contexto resultante. La
 implementamos con LangChain y le añadimos lo que exige el caso de EcoMarket: documentos
-heterogéneos, recuperación exacta de pedidos y un umbral de abstención. La tabla ubica cada paso
-en el código.
+heterogéneos, recuperación exacta de pedidos y un umbral de abstención.
 
 | Paso del flujo           | Pieza en nuestra implementación                                                           | Decisión para EcoMarket                                                                                                             |
 | ------------------------ | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -114,8 +114,9 @@ def recuperar_candidatos(consulta: str, k: int) -> list[Document]:
 
 `similarity_search_with_score` vectoriza la consulta con el mismo `HuggingFaceEmbeddings` que se
 usó al indexar, con el prefijo `query:`, y le pide a Chroma los 20 vecinos más cercanos. Chroma
-devuelve la distancia de coseno. La convertimos en similitud ($1 - d$) y guardamos junto con ella
-la posición original de cada candidato, para poder ver después cuánto lo movió el reranker.
+devuelve la distancia de coseno. La convertimos en similitud, restando la distancia de 1, y
+guardamos junto con ella la posición original de cada candidato, para poder ver después cuánto lo
+movió el reranker.
 
 ### 3.3 Etapa 2: reranking
 
@@ -194,27 +195,51 @@ y `StrOutputParser` extrae el texto de la respuesta.
 
 ### 5.1 Diseño
 
-**Pregunta.** ¿Cuánto mejora la calidad de los fragmentos que recibe el modelo cuando los
-candidatos del bi-encoder se reordenan con un cross-encoder?
+**Pregunta.** El modelo generativo solo puede responder bien si recibe los fragmentos correctos.
+Queremos saber si el reranker mejora esa selección: si, entre los 20 candidatos que trae la
+búsqueda vectorial, escoge mejor los cuatro que finalmente lee Iris.
 
-**Control de variables.** [src/experimento.py](src/experimento.py) obtiene **una sola vez** los 20
-candidatos de cada consulta. La variante A entrega los 4 primeros en el orden de la similitud de
-coseno. La variante B reordena esos mismos 20 con `bge-reranker-v2-m3` y entrega sus 4 primeros.
-Las dos variantes ven exactamente los mismos candidatos y entregan la misma cantidad de fragmentos.
-Lo único que cambia es cómo se ordenan esos 20 candidatos y, por tanto, cuáles cuatro llegan al
-modelo. El experimento no llama al modelo generativo, así que es
-determinista y no consume cuota de la API.
+**Cómo lo medimos.** Para cada consulta de prueba, [src/experimento.py](src/experimento.py) hace la
+búsqueda vectorial **una sola vez** y obtiene los mismos 20 candidatos para todas las variantes. A
+partir de ahí, cada variante elige sus cuatro fragmentos de una forma distinta:
 
-El reporte incluye además una **variante C**, que es la variante B con el umbral de relevancia
-aplicado al mejor candidato, tal como opera `settings-reranking.toml`. La comparación A frente a B
-aísla el efecto del reordenamiento. La variante C mide la configuración que realmente se despliega,
-incluido el costo de sus abstenciones.
+```mermaid
+flowchart LR
+    Q["Consulta de prueba"] --> V["Búsqueda vectorial<br/>20 candidatos"]
+    V --> A["Variante A<br/>los 4 más parecidos<br/>según el bi-encoder"]
+    V --> R["El cross-encoder<br/>vuelve a leer los 20<br/>y los reordena"]
+    R --> B["Variante B<br/>los 4 mejor puntuados<br/>por el reranker"]
+    R --> C["Variante C<br/>igual que B, salvo que<br/>se abstiene si ni el mejor<br/>alcanza el umbral"]
+    A --> K["Se comparan los 4 elegidos<br/>con la clave de respuestas"]
+    B --> K
+    C --> K
+```
 
-**Conjunto de evaluación.** Redactamos 24 consultas en
+- **Variante A, sin reranking.** Toma los cuatro primeros candidatos en el orden en que los dejó el
+  bi-encoder, es decir, los cuatro textos más parecidos a la consulta.
+- **Variante B, con reranking.** El cross-encoder lee cada uno de los 20 candidatos junto con la
+  consulta, le asigna un puntaje de relevancia y se quedan los cuatro mejores.
+- **Variante C, con reranking y umbral.** Es la variante B tal como funciona en
+  `settings-reranking.toml`: si ni siquiera el mejor candidato alcanza el umbral de relevancia, no
+  entrega ningún fragmento y Iris debe decir que no tiene la información.
+
+Como las tres variantes parten de los mismos 20 candidatos y entregan como máximo cuatro, cualquier
+diferencia entre A y B se debe solo a **cómo se eligen** esos cuatro. La comparación entre A y C
+muestra, además, cuánto cuesta la abstención en la configuración que usa el asistente.
+
+El experimento no llama al modelo generativo. Evalúa el contexto que recibiría Iris, no la
+redacción de su respuesta. Por eso da siempre el mismo resultado y no consume cuota de la API.
+
+**La clave de respuestas.** Redactamos 24 consultas de prueba en
 [consultas-evaluacion.json](src/datos/evaluacion/consultas-evaluacion.json), distintas de las ocho
-consultas de cliente que usamos después para comparar respuestas. Para cada una marcamos los
-fragmentos relevantes con dos grados: **2** si el fragmento responde directamente y **1** si
-complementa la respuesta.
+consultas de cliente que usamos después para comparar respuestas. Para cada una revisamos la base y
+anotamos qué fragmentos sirven para contestarla, con dos niveles:
+
+- **Relevancia 2:** el fragmento responde directamente la pregunta.
+- **Relevancia 1:** el fragmento no la responde por sí solo, pero aporta un dato complementario.
+
+Con esa clave, el script puede revisar automáticamente si los cuatro fragmentos elegidos por cada
+variante son los que debían llegar al modelo. Las consultas cubren cinco situaciones:
 
 | Tipo             | Cantidad | Qué pone a prueba                                                            | Ejemplo                                                                                |
 | ---------------- | -------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -226,22 +251,62 @@ complementa la respuesta.
 
 ### 5.2 Métricas
 
-Sea $g_i$ el grado de relevancia del fragmento en la posición $i$ de los $n = 4$ entregados y $R$ el
-conjunto de fragmentos relevantes de la consulta.
+Todas las métricas comparan los cuatro fragmentos elegidos con la clave de respuestas. El sufijo
+«@4» indica que se calculan sobre esos cuatro, que son los que lee Iris. Cada métrica vale entre
+0 y 1, y se promedia sobre las 20 consultas que tienen respuesta en la base.
 
-| Métrica     | Definición                                                                                                        | Qué indica                                                           |
-| ----------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Hit@4       | $1$ si algún $g_i > 0$; $0$ en otro caso                                                                          | Si el modelo recibe al menos un fragmento útil                       |
-| MRR@4       | $\frac{1}{r}$, con $r$ la posición del primer fragmento relevante; $0$ si no hay                                  | Qué tan arriba aparece lo primero útil                               |
-| nDCG@4      | $\frac{\mathrm{DCG@4}}{\mathrm{IDCG@4}}$, con $\mathrm{DCG@4} = \sum_{i=1}^{4} \frac{2^{g_i} - 1}{\log_2(i + 1)}$ | Calidad del orden completo, premiando lo más relevante en lo alto    |
-| Precision@4 | $\frac{\lvert\{i \le 4 : g_i > 0\}\rvert}{4}$                                                                     | Qué proporción del contexto entregado es útil                        |
-| Recall@4    | $\frac{\lvert\{i \le 4 : g_i > 0\}\rvert}{\lvert R \rvert}$                                                       | Qué proporción de lo relevante llega al modelo                       |
-| Recall@20   | Proporción de $R$ presente entre los 20 candidatos                                                                | Techo de la etapa 1: lo que el reranker puede, como máximo, rescatar |
+| Métrica     | Pregunta que responde                                                  | Cómo se calcula                                                                             |
+| ----------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Hit@4       | ¿Llegó al modelo al menos un fragmento útil?                           | Vale 1 si hay alguno entre los cuatro y 0 si no hay ninguno                                 |
+| MRR@4       | ¿Qué tan arriba aparece el primer fragmento útil?                      | Vale 1 si está en el primer puesto, 1/2 en el segundo, 1/3 en el tercero y 1/4 en el cuarto |
+| Precision@4 | De lo que recibe el modelo, ¿qué parte sirve?                          | Fragmentos útiles entre los cuatro, dividido entre cuatro                                   |
+| Recall@4    | De lo que debía recibir el modelo, ¿qué parte le llegó?                | Fragmentos útiles entre los cuatro, dividido entre el total de útiles de la clave           |
+| nDCG@4      | ¿Qué tan bueno es el conjunto elegido, comparado con el mejor posible? | Se explica abajo                                                                            |
+| Recall@20   | ¿Cuántos fragmentos útiles alcanzó a traer la búsqueda vectorial?      | Como Recall@4, pero sobre los 20 candidatos                                                 |
 
-nDCG@4 es la métrica central del experimento. El aporte esperado de un reranker es ordenar mejor,
-no encontrar más, y nDCG es la única de estas métricas sensible a que el fragmento de grado 2 quede
-por encima del de grado 1. IDCG@4 es el DCG del orden ideal, así que nDCG vale 1 cuando el orden es
-perfecto.
+**nDCG@4, la métrica central.** Las otras métricas tratan igual a todos los fragmentos útiles.
+nDCG@4 distingue dos cosas más: si el fragmento responde la pregunta o solo la complementa, y en
+qué puesto quedó. Funciona como un puntaje por puntos:
+
+1. Cada fragmento útil suma puntos. Uno que responde directamente vale 3 puntos y uno que
+   complementa vale 1.
+2. Los puntos pesan menos cuanto más abajo queda el fragmento. En el primer puesto cuentan
+   completos, en el segundo cuentan un 63%, en el tercero un 50% y en el cuarto un 43%. Así se
+   premia que lo más importante quede primero.
+3. El total se divide entre el puntaje que tendría la mejor selección posible para esa consulta.
+   Un nDCG@4 de 1 significa que la variante eligió y ordenó los fragmentos de la mejor manera
+   posible; uno de 0, que no entregó ninguno útil.
+
+**Un ejemplo real.** Para la consulta «¿en cuánto tiempo me devuelven la plata después de
+mandarles el producto de vuelta?», la clave marca tres fragmentos: los plazos generales de la
+política, que responden directamente, y el proceso de devolución y los reembolsos al medio de
+pago, que complementan.
+
+| Puesto | Variante A, sin reranking           | Variante B, con reranking           |
+| ------ | ----------------------------------- | ----------------------------------- |
+| 1      | Proceso de devolución (complementa) | **Plazos generales (responde)**     |
+| 2      | Pregunta frecuente sobre alimentos  | Proceso de devolución (complementa) |
+| 3      | Categorías no retornables           | Excepciones de la política          |
+| 4      | Cobros duplicados                   | Pregunta frecuente sobre garantías  |
+
+| Métrica     | A    | B    | Lectura                                                         |
+| ----------- | ---- | ---- | --------------------------------------------------------------- |
+| Hit@4       | 1    | 1    | Las dos entregan algo útil                                      |
+| MRR@4       | 1    | 1    | En las dos, el primer puesto es útil                            |
+| Precision@4 | 0,25 | 0,50 | A acierta uno de cuatro; B, dos de cuatro                       |
+| Recall@4    | 0,33 | 0,67 | A trae uno de los tres fragmentos de la clave; B, dos           |
+| nDCG@4      | 0,24 | 0,88 | Solo B entrega el fragmento que responde, y en el primer puesto |
+
+Hit@4 y MRR@4 no ven diferencia, porque en ambas variantes el primer fragmento sirve. Pero la
+variante A nunca le entrega a Iris el plazo del reembolso, que es justo lo que el cliente
+pregunta. nDCG@4 sí lo refleja. Por eso es la métrica central: el aporte que esperamos del reranker
+es elegir y ordenar mejor, y nDCG@4 es la única de estas métricas que premia tener el fragmento
+que responde por encima del que complementa.
+
+**Recall@20, el techo del sistema.** El reranker solo puede reordenar lo que la búsqueda vectorial
+trajo. Si un fragmento útil no está entre los 20 candidatos, ninguna variante puede entregarlo.
+Recall@20 mide ese límite, y depende del modelo de embeddings y de la segmentación, no del
+reranker.
 
 ### 5.3 Resultados agregados
 
@@ -249,7 +314,7 @@ El reporte completo generado por el script está en
 [outputs/experimento/reporte.md](outputs/experimento/reporte.md) y los valores por consulta, en
 [metricas.csv](outputs/experimento/metricas.csv).
 
-Sobre las 20 consultas que tienen respuesta en la base:
+Sobre las 20 consultas que tienen respuesta en la base, en promedio:
 
 | Métrica     | Sin reranking (A) | Con reranking (B) | B − A      | Con reranking y umbral (C) | C − A  |
 | ----------- | ----------------- | ----------------- | ---------- | -------------------------- | ------ |
@@ -259,26 +324,34 @@ Sobre las 20 consultas que tienen respuesta en la base:
 | Precision@4 | 0,325             | 0,400             | +0,075     | 0,375                      | +0,050 |
 | Recall@4    | 0,783             | 0,933             | +0,150     | 0,858                      | +0,075 |
 
+En palabras: sin reranking, los cuatro fragmentos elegidos alcanzan en promedio el 76,5% del puntaje
+de la mejor selección posible; con reranking, el 90,8%. Con reranking, algún fragmento útil llega
+en las 20 consultas, frente a 18 sin reranking, y en promedio el modelo recibe el 93,3% de lo que
+debía recibir, frente al 78,3%.
+
 La variante C pierde frente a B dos consultas, P04 y P06. En ambas el reranker había subido el
-fragmento correcto al top-4, pero el mejor candidato no alcanza el umbral (0,0033 y 0,0004) y el
-sistema se abstiene. Aun con ese costo, la configuración desplegada supera a la línea base en
-todas las métricas salvo Hit@4, donde empata, y a cambio identifica tres de las cuatro consultas
-fuera de alcance (sección 5.6), algo que la variante A no puede hacer.
+fragmento correcto a los cuatro primeros, pero el mejor candidato no alcanza el umbral (0,0033 y
+0,0004) y el sistema se abstiene. Aun con ese costo, la configuración que usa el asistente supera a
+la variante sin reranking en todas las métricas salvo Hit@4, donde empata, y a cambio identifica
+tres de las cuatro consultas fuera de alcance (sección 5.6), algo que la variante A no puede hacer.
 
-El techo de la primera etapa es **Recall@20 = 0,975**: el 97,5% de los fragmentos relevantes llega a
-los 20 candidatos. Con reranking, el Recall@4 sube a 0,933, es decir, el reranker lleva a las cuatro
-primeras posiciones casi todo lo que la primera etapa encontró.
+El techo de la primera etapa es **Recall@20 = 0,975**: el 97,5% de los fragmentos útiles llega a los
+20 candidatos. Con reranking, el Recall@4 es 0,933, es decir, el reranker lleva a los cuatro
+primeros puestos casi todo lo que la búsqueda vectorial encontró.
 
-El reranking mejora nDCG@4 en 10 consultas, lo empeora en 1 y lo deja igual en 9. Para descartar
-que ese balance sea casual, aplicamos una prueba de signos a las 11 consultas en las que nDCG@4
-cambia. Si el reranking no tuviera efecto, mejorar o empeorar sería igual de probable, y obtener 10
-mejoras o más entre 11 casos, o el resultado opuesto, tiene una probabilidad de
-$p = 2 \cdot \frac{\binom{11}{0} + \binom{11}{1}}{2^{11}} \approx 0{,}012$. Con 20 consultas la prueba
-tiene poca potencia, pero el resultado es significativo al 5%.
+Consulta por consulta, el reranking mejora nDCG@4 en 10, lo empeora en
+1 y lo deja igual en 9. Para saber si ese balance podría deberse al azar, aplicamos una prueba de
+signos a las 11 consultas en las que hubo cambio. La idea es la de lanzar una moneda: si el
+reranking no tuviera ningún efecto, en cada consulta sería igual de probable que mejorara o que
+empeorara, como sacar cara o sello. Obtener por puro azar un resultado tan desequilibrado como 10
+de 11, hacia cualquiera de los dos lados, ocurre en poco más de 1 de cada 100 intentos (p ≈ 0,012).
+Es lo bastante improbable para descartar la casualidad con el criterio habitual del 5%, aunque con
+solo 20 consultas la prueba no permite estimar con precisión el tamaño de la mejora.
 
-Los valores absolutos de Precision@4 son bajos en ambas variantes por construcción: la mayoría de
-las consultas tiene uno o dos fragmentos relevantes, así que Precision@4 no puede superar 0,25 o
-0,50. Lo informativo es la diferencia entre variantes, no el valor.
+Los valores de Precision@4 son bajos en ambas variantes por construcción: la mayoría de las
+consultas tiene uno o dos fragmentos útiles en la clave, así que, aunque la variante acierte todos,
+tres o dos de los cuatro puestos quedan con fragmentos que no estaban en la clave. Lo informativo
+es la diferencia entre variantes, no el valor.
 
 ### 5.4 Resultados por tipo de consulta
 
@@ -319,7 +392,7 @@ de los fragmentos complementarios (nDCG de 0,913 a 0,957).
 
 **Multidocumento: el reranker completa el contexto.** En la consulta sobre grabar el termo, el
 bi-encoder encontraba la pregunta frecuente sobre personalización, pero no la ficha del termo. El
-reranker sube la ficha al top-4 (nDCG de 0,673 a 0,987), y así el modelo recibe la regla general y
+reranker sube la ficha a los cuatro primeros (nDCG de 0,673 a 0,987), y así el modelo recibe la regla general y
 el producto concreto.
 
 ### 5.5 Casos negativos
@@ -388,14 +461,9 @@ El costo de los errores no es simétrico, y eso justifica un umbral bajo. Una ab
 deja sin respuesta a un cliente que preguntaba por un producto del catálogo. Una consulta ajena que
 supera el umbral llega a Iris con fragmentos que no la responden, y el prompt le ordena reconocerlo.
 Aplicar el umbral al mejor candidato, y no a cada fragmento, también reduce la pérdida de
-información. Con el umbral de 0,005, un filtro por fragmento descartaría 5 fragmentos relevantes del
-top-4. Con el criterio adoptado, aplicado al mejor candidato, se pierden 2: los de P04 y P06, las
+información. Con el umbral de 0,005, un filtro por fragmento descartaría 5 fragmentos relevantes de los cuatro
+entregados. Con el criterio adoptado, aplicado al mejor candidato, se pierden 2: los de P04 y P06, las
 consultas en que el sistema se abstiene.
-
-Esta calibración tiene la limitación que señalamos en la sección 8.2: un umbral calibrado sobre el
-mismo conjunto que se reporta resulta optimista. Las ocho consultas de cliente cumplen aquí el
-papel de validación, pero al usarlas para fijar el umbral dejan de ser independientes. Confirmar el
-valor de 0,005 exige un tercer conjunto de consultas que no hayamos visto.
 
 ### 5.7 Costo en latencia
 
@@ -455,8 +523,8 @@ consultas directas.
 **El caso negativo es real y tiene una causa identificable.** En la consulta 06, «el grano venía
 regado por toda la caja… ¿Les tengo que mandar el café de vuelta?» comparte palabras y sentido con
 «¿Puedo devolverles la caja en la que llegó mi pedido?». Allí el cross-encoder cayó en el
-distractor que el bi-encoder había resistido, y la tabla de categorías no retornables salió del
-top-4. La excepción de la política llegó en la segunda posición e Iris aplicó la regla correcta en
+distractor que el bi-encoder había resistido, y la tabla de categorías no retornables salió de los
+cuatro entregados. La excepción de la política llegó en la segunda posición e Iris aplicó la regla correcta en
 ambas variantes. Lo atribuible al reranking es el deterioro del contexto, no un error en la
 respuesta. El reranker también es un modelo estadístico: reduce los errores de orden, no los
 elimina.
@@ -488,8 +556,49 @@ python src/indexar.py --listar                    # construye el índice (una ve
 python src/app.py src/datos/consultas/07-multi-documento.txt \
   --configuracion src/settings-reranking.toml     # una consulta con reranking
 python src/experimento.py                         # métricas de recuperación, sin API
+python src/interfaz.py                            # chat en http://127.0.0.1:7860
 ./generar_salidas.sh                              # todo el flujo y las 16 respuestas
 ```
+
+### 7.1 Interfaz de chat
+
+[src/interfaz.py](src/interfaz.py) ofrece una conversación con Iris construida con Gradio. Usa la
+misma cadena LCEL que `app.py`, con las dos configuraciones precargadas al arrancar, y un selector
+permite alternar entre la variante con reranking y la variante sin reranking en cualquier momento
+de la conversación. Cada respuesta indica con qué variante se generó.
+
+La pantalla se divide en dos columnas. A la izquierda está la conversación, con la respuesta de
+Iris escribiéndose a medida que Gemini la genera. A la derecha, un panel muestra lo que recibió el
+modelo en el último turno:
+
+- los fragmentos entregados, con su fuente y sección, su similitud, su posición vectorial y, con
+  reranking, el puntaje del cross-encoder, junto con un extracto del texto;
+- el pedido citado, cuando el mensaje incluye un número de seguimiento;
+- un aviso cuando ningún fragmento alcanza el umbral de relevancia;
+- la clasificación de la respuesta, que se retira del texto del chat y se muestra como etiqueta.
+
+Mientras se procesa un mensaje, el panel indica la etapa en curso: la búsqueda vectorial, el
+reordenamiento con el reranker o la redacción de la respuesta.
+
+**Historial de la conversación.** El chat envía al modelo los tres turnos anteriores en un bloque
+HISTORIAL, acompañado de la instrucción `historial_prompt` de los TOML. El historial solo sirve para
+interpretar preguntas de seguimiento como «¿y cuánto cuesta?»: los datos de la respuesta siguen
+saliendo únicamente de los bloques PEDIDOS y CONOCIMIENTO del turno. La recuperación de fragmentos
+y la búsqueda de pedidos trabajan con el mensaje actual. `app.py`, `generar_salidas.sh` y el
+experimento no envían historial, así que su prompt no incluye ese bloque.
+
+La interfaz escucha solo en `127.0.0.1` para no exponer la clave ni la cuota de Gemini.
+
+![Interfaz de chat de Iris con el panel de fragmentos consultados](imagenes/interfaz-chat.png)
+
+La captura muestra la consulta «¿Qué métodos de pago aceptan?» con la variante con reranking. Iris
+enumera los medios de pago y la respuesta queda marcada con la variante que la generó. A la derecha
+aparecen la etiqueta «Resuelto por el asistente» y los cuatro fragmentos que recibió el modelo. La
+sección «8. Métodos de pago» ocupa el primer puesto con un puntaje del reranker de 0,9599, muy por
+encima del resto. En los puestos 3 y 4 se ve el intercambio que describe la sección 5.5: la sección
+de pagos a cuotas, cuarta según la búsqueda vectorial, sube al tercer lugar y la pregunta frecuente
+sobre seguridad de pagos baja al cuarto. El funcionamiento del chat puede verse en el
+[video de demostración](https://www.youtube.com/watch?v=yllORKz-tu8).
 
 ## 8. Limitaciones y suposiciones
 
@@ -517,8 +626,11 @@ python src/experimento.py                         # métricas de recuperación, 
   formatos irregulares que harían más difícil la recuperación.
 - **Sin búsqueda híbrida.** Una consulta por SKU exacto depende solo de la similitud semántica. En
   la Fase 1 identificamos este caso como disparador para migrar a una base con BM25 integrado.
-- **Sin memoria de conversación.** Cada mensaje se atiende de forma independiente. Una pregunta de
-  seguimiento como «¿y cuánto cuesta?» no tiene contexto.
+- **Memoria de conversación limitada.** La línea de comandos atiende cada mensaje de forma
+  independiente. La interfaz de chat envía los tres turnos anteriores, pero solo para interpretar
+  la pregunta: la recuperación usa el mensaje actual, así que un seguimiento como «¿y cuánto
+  cuesta?» puede no traer la ficha del producto, e Iris debe reconocer que no tiene el dato. Tampoco
+  medimos el efecto del historial en el experimento.
 
 ### 8.3 Suposiciones
 
@@ -543,8 +655,8 @@ python src/experimento.py                         # métricas de recuperación, 
   decir, en la forma en que escriben los clientes reales. En las consultas que repiten el
   vocabulario del documento, el bi-encoder ya basta.
 - **El reranker solo mejora lo que la segmentación permite.** Con un fragmento por sección, el
-  97,5% de los fragmentos relevantes llega a los 20 candidatos, y el reranker lleva casi todos al
-  top-4. Lo que la etapa 1 no encuentra, ningún reordenamiento lo rescata. El buen desempeño en los
+  97,5% de los fragmentos relevantes llega a los 20 candidatos, y el reranker lleva casi todos a los
+  cuatro primeros puestos. Lo que la etapa 1 no encuentra, ningún reordenamiento lo rescata. El buen desempeño en los
   distractores probablemente se debe al encabezado contextual. La Fase 2 condiciona el resultado de
   la Fase 3.
 - **El puntaje del reranker es una señal de abstención que la similitud de coseno no ofrece**,

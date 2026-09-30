@@ -248,4 +248,4 @@ La calidad de la base se refleja directamente en el experimento de la Fase 3:
   que mezcle dos temas obtiene un puntaje intermedio para ambas preguntas, y el umbral de
   relevancia no puede separar lo pertinente de lo que no lo es. Por ejemplo, la sección «Métodos de
   pago», sola en su fragmento, obtiene 0,96 para «¿Qué métodos de pago aceptan?», y la sección
-  «Cambios de dirección» llega al top-4 para la consulta sobre una mudanza.
+  «Cambios de dirección» llega a los cuatro primeros puestos para la consulta sobre una mudanza.

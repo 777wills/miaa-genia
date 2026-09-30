@@ -63,6 +63,16 @@ orden los siguientes pasos:
    los bloques de contexto.
 """
 
+# Solo se envía cuando la conversación tiene turnos previos (interfaz de chat).
+historial_prompt = """
+El bloque delimitado entre >>>>> INICIO HISTORIAL y <<<<< FIN HISTORIAL contiene los turnos
+anteriores de esta conversación. Úsalo solo para entender a qué se refiere la consulta actual, por
+ejemplo cuando el cliente escribe «¿y cuánto cuesta?». El historial no es una fuente de
+información: todo dato que des, como precios, plazos, estados de pedido o reglas de la política,
+debe aparecer en los bloques PEDIDOS o CONOCIMIENTO de este turno. Si un dato solo aparece en el
+historial, no lo repitas como cierto y aplica el paso 6 de las instrucciones.
+"""
+
 [[prompts.ejemplos]]
 consulta = """
 >>>>> INICIO PEDIDOS

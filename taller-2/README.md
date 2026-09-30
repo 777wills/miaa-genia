@@ -80,6 +80,20 @@ Ejecuta el experimento de recuperación. No llama a la API de Gemini:
 python src/experimento.py
 ```
 
+Abre la interfaz de chat para conversar con Iris y alternar entre la variante con reranking y la
+variante sin reranking. Queda disponible en `http://127.0.0.1:7860`, solo en el propio equipo:
+
+```bash
+python src/interfaz.py
+```
+
+El funcionamiento del chat puede verse en este
+[video de demostración](https://www.youtube.com/watch?v=yllORKz-tu8):
+
+[![Video de demostración de la interfaz de chat](https://img.youtube.com/vi/yllORKz-tu8/hqdefault.jpg)](https://www.youtube.com/watch?v=yllORKz-tu8)
+
+![Interfaz de chat de Iris con el panel de fragmentos consultados](imagenes/interfaz-chat.png)
+
 Ejecuta todo de principio a fin: el índice si no existe, las ocho consultas con ambas
 configuraciones y el experimento:
 
@@ -102,6 +116,7 @@ taller-2/
 ├── generar_salidas.sh
 ├── requirements.txt
 ├── .env.example
+├── imagenes/interfaz-chat.png       Captura de la interfaz de chat
 ├── outputs/
 │   ├── indice/fragmentos.md         Los 75 fragmentos indexados
 │   ├── sin-reranking/               Respuestas con la variante sin reranking
@@ -111,6 +126,7 @@ taller-2/
     ├── rag.py                       Segmentación, embeddings, ChromaDB, reranking y cadena LCEL
     ├── indexar.py                   Construcción del índice vectorial
     ├── app.py                       Asistente de línea de comandos
+    ├── interfaz.py                  Interfaz de chat con Gradio
     ├── experimento.py               Comparación sin reranking frente a con reranking
     ├── settings-sin-reranking.toml
     ├── settings-reranking.toml
