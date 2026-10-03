@@ -5,4 +5,5 @@ __pycache__/
 src/indice/
 src/runtime/*.json
 outputs/*.jsonl
+!outputs/evidencia-rubrica-gemini.jsonl
 .DS_Store

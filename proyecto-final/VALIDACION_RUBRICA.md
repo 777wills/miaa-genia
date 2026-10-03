@@ -20,10 +20,12 @@ Checklist interno. Distingue lo que está implementado de lo que se ejecutó loc
 - [x] Hay pruebas unitarias para reglas y pruebas controladas del ciclo de tool calling.
 - [x] El adaptador conecta la tool con la cadena LCEL y devuelve evidencia de recuperación.
 - [x] Ocho casos especifican el comportamiento esperado en `tests/casos_agente.json`.
-- [ ] No se ejecutó el RAG completo con Chroma y los modelos reales en este entorno.
-- [ ] No se ejecutaron decisiones reales de Gemini; la evaluación de los ocho prompts sigue pendiente.
+- [x] El caso informativo ejecutó Chroma y el reranker reales: 20 candidatos y cuatro fragmentos finales.
+- [x] Los casos A–H se ejecutaron con Gemini real; la última corrida aprobó los ocho casos.
+- [x] La devolución válida completó verificación, etiqueta y registro; el prompt injection no saltó las herramientas de seguridad.
+- [x] La evidencia resumida está en `outputs/evidencia-rubrica-gemini.jsonl`; no contiene prompts, claves ni argumentos.
 
-**Estado:** implementación y controles unitarios cubiertos; validación E2E pendiente.
+**Estado:** implementación y flujos E2E comprobados en la última ejecución local.
 
 ## 3. Análisis crítico y monitoreo
 
@@ -38,14 +40,15 @@ Checklist interno. Distingue lo que está implementado de lo que se ejecutó loc
 
 - [x] Gradio incluye chat, ejemplos, limpieza y panel de actividad.
 - [x] La interfaz maneja excepciones normales del agente sin perder la conversación.
-- [ ] No se levantó la interfaz ni se completó una demostración de extremo a extremo en este entorno.
-- [ ] La prueba E2E con Gemini requiere dependencias instaladas, índice construido y `GEMINI_API_KEY`.
+- [x] Gradio respondió HTTP 200 y se probó desde navegador con una consulta RAG real.
+- [x] El panel mostró candidatos, similitud, puntajes de reranking, fragmentos finales y clasificación.
+- [x] La respuesta visible fue texto limpio, sin metadatos internos de Gemini.
 
-**Estado:** interfaz implementada; funcionamiento E2E pendiente de verificación.
+**Estado:** recorrido desde navegador hasta Gemini, RAG y panel de actividad comprobado.
 
 ## Validación local disponible
 
-La suite offline cubre reglas de negocio, orquestación simulada, contrato del adaptador RAG y observabilidad. Los dobles de prueba no demuestran la calidad de selección de herramientas de Gemini ni sustituyen una consulta real al índice.
+La suite offline cubre reglas de negocio, orquestación simulada, adaptador RAG, panel, estructura documental y observabilidad. Las ocho pruebas E2E están separadas para evitar consumo accidental de API y se habilitan de forma explícita.
 
 Para repetir las pruebas:
 
@@ -54,4 +57,4 @@ python -m compileall -q src tests
 python -m unittest discover -s tests -v
 ```
 
-Antes de entregar, ejecutar los prompts de `PROMPTS_DEMO.md` con la credencial configurada y confirmar los casos A–H, el RAG y la interfaz. No afirmar una calificación de 5/5 sin esa verificación.
+La validación de esta copia terminó con 30 pruebas offline aprobadas; las ocho pruebas E2E aprobadas se ejecutaron por separado con `RUN_GEMINI_E2E=1`. La calificación académica final depende del criterio del docente y no puede garantizarse únicamente mediante tests.

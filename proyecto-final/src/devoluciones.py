@@ -88,7 +88,7 @@ def _requiere_humano(motivo: str) -> bool:
 def _condicion_cumplida(condicion: str, categoria: str) -> bool:
     texto = _normalizar(condicion)
     requisitos = {
-        "Textiles": ("sin uso", "etiquet", "sin olor"),
+        "Textiles": ("sin uso", "etiquet"),
         "Hogar": ("sin uso", "empaque original", "accesorios completos"),
         "Electrónica": (
             "empaque", "cable", "manual", "serie", "verificad",
@@ -97,19 +97,31 @@ def _condicion_cumplida(condicion: str, categoria: str) -> bool:
     }
     if categoria not in requisitos or not all(item in texto for item in requisitos[categoria]):
         return False
-    if categoria == "Textiles" and not any(
-        frase in texto for frase in ("sin mancha", "ni mancha")
-    ):
-        return False
+    if categoria == "Textiles":
+        if not _ausencia_de(texto, "olor") or not _ausencia_de(texto, "mancha"):
+            return False
 
     condiciones_negadas = (
-        "sin etiqueta", "etiquetas retiradas", "con olor", "con manchas", "sin empaque",
+        "sin etiqueta", "etiquetas retiradas", "con olor", "con olores", "con manchas",
+        "sin empaque",
         "empaque danado", "empaque roto", "empaque original danado", "empaque original roto",
         "accesorios incompletos", "faltan accesorios", "sin cable", "sin cables", "sin manual",
         "serie no verificada", "serie no verificado", "no se verifico la serie",
         "con marcas de escritura", "producto usado",
     )
     return not any(item in texto for item in condiciones_negadas)
+
+def _ausencia_de(texto: str, termino: str) -> bool:
+    return any(
+        frase in texto
+        for frase in (
+            f"sin {termino}",
+            f"ni {termino}",
+            f"no tiene {termino}",
+            f"no presenta {termino}",
+            f"libre de {termino}",
+        )
+    )
 
 def _runtime(state_dir: Path | None) -> Path:
     return state_dir or DEFAULT_STATE_DIR

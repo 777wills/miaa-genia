@@ -122,6 +122,32 @@ class TestAgentRuntime(unittest.TestCase):
         self.assertEqual(result["eventos"], [])
         self.assertEqual(len(llm.calls), 1)
 
+    def test_respuesta_en_bloques_omite_firma_y_metadata(self):
+        llm = FakeLLM(
+            [
+                AIMessage(
+                    content=[
+                        {
+                            "type": "text",
+                            "text": "Tienes 30 días calendario para solicitar una devolución.",
+                            "extras": {"signature": "firma-interna"},
+                        },
+                        {"type": "image", "url": "dato-interno"},
+                    ]
+                )
+            ]
+        )
+        _module, agent = self.construir_agente(llm)
+
+        result = agent.responder("¿Cuál es el plazo?")
+
+        self.assertEqual(
+            result["respuesta"],
+            "Tienes 30 días calendario para solicitar una devolución.",
+        )
+        self.assertNotIn("firma-interna", result["respuesta"])
+        self.assertNotIn("dato-interno", result["respuesta"])
+
     def test_ejecuta_tool_y_devuelve_tool_message_al_modelo(self):
         tool = FakeTool({"ok": True, "codigo": "ELEGIBLE"})
         llm = FakeLLM(

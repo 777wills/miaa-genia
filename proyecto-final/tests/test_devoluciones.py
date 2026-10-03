@@ -39,6 +39,16 @@ class TestDevoluciones(unittest.TestCase):
         self.assertFalse(r["elegible"])
         self.assertEqual(r["codigo"], "CONDICION_INSUFICIENTE")
 
+    def test_textil_acepta_formulacion_no_tiene_olores_ni_mancha(self):
+        r = verificar_elegibilidad(
+            "ECO-2026-1042",
+            "TEX-0031",
+            "cambio de talla",
+            "sin uso, conserva las etiquetas adheridas y no tiene olores ni manchas",
+            self.state,
+        )
+        self.assertTrue(r["elegible"])
+
     def test_garantia_legal_se_escala_a_persona(self):
         r = verificar_elegibilidad(
             "ECO-2026-1042",

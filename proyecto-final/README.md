@@ -108,6 +108,14 @@ python -m unittest discover -s tests -v
 
 Las pruebas del agente usan respuestas controladas para verificar el ciclo de `tool_calls`; no sustituyen la evaluación de decisiones del modelo. Los prompts manuales están en `PROMPTS_DEMO.md` y los ocho casos de referencia en `tests/casos_agente.json`.
 
+Para ejecutar los ocho casos A–H contra Gemini y el índice real (consume llamadas de API):
+
+```bash
+RUN_GEMINI_E2E=1 python -m unittest discover -s tests -p 'test_rubrica_e2e.py' -v
+```
+
+Esta suite usa un directorio temporal para el estado de devoluciones. Guarda en `outputs/evidencia-rubrica-gemini.jsonl` el identificador, las tools y el resultado de cada caso, sin prompts ni argumentos del cliente.
+
 ## Ejecutar por consola
 
 ```bash

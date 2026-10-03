@@ -1,12 +1,16 @@
 import sys
 import unittest
 import importlib.util
+import importlib
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+
+module_names = ("tools", "rag", "langchain_core", "langchain_core.tools")
+previous_modules = {name: sys.modules.get(name) for name in module_names}
 
 if importlib.util.find_spec("langchain_core") is None:
     langchain_core = ModuleType("langchain_core")
@@ -24,8 +28,17 @@ if importlib.util.find_spec("langchain_core") is None:
 
 rag_stub = ModuleType("rag")
 sys.modules["rag"] = rag_stub
+sys.modules.pop("tools", None)
 
-from tools import consultar_base_conocimiento
+try:
+    tools_module = importlib.import_module("tools")
+    consultar_base_conocimiento = tools_module.consultar_base_conocimiento
+finally:
+    for name, previous in previous_modules.items():
+        if previous is None:
+            sys.modules.pop(name, None)
+        else:
+            sys.modules[name] = previous
 
 
 class TestHerramientaRag(unittest.TestCase):
@@ -46,7 +59,7 @@ class TestHerramientaRag(unittest.TestCase):
             }
         )
 
-        with patch("tools._cadena_rag", return_value=cadena):
+        with patch.object(tools_module, "_cadena_rag", return_value=cadena):
             resultado = consultar_base_conocimiento.invoke({"consulta": "plazo devolución"})
 
         self.assertTrue(resultado["ok"])

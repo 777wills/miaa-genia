@@ -17,6 +17,25 @@ from tools import TOOLS, TOOL_MAP
 BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR.parent / ".env"
 
+
+def _extraer_texto(contenido: Any) -> str:
+    if isinstance(contenido, str):
+        return contenido
+    if isinstance(contenido, list):
+        textos = []
+        for bloque in contenido:
+            if isinstance(bloque, str):
+                textos.append(bloque)
+            elif (
+                isinstance(bloque, dict)
+                and bloque.get("type") == "text"
+                and isinstance(bloque.get("text"), str)
+            ):
+                textos.append(bloque["text"])
+        return "\n".join(texto for texto in textos if texto).strip()
+    return ""
+
+
 SYSTEM_PROMPT = """
 Eres Iris, la asistente de EcoMarket. Puedes responder consultas y ejecutar el proceso simulado de
 devoluciones mediante herramientas.
@@ -79,7 +98,9 @@ class IrisAgent:
 
             tool_calls = getattr(ai, "tool_calls", None) or []
             if not tool_calls:
-                contenido = ai.content if isinstance(ai.content, str) else str(ai.content)
+                contenido = _extraer_texto(ai.content)
+                if not contenido:
+                    contenido = "No recibí una respuesta textual válida del modelo."
                 return {
                     "ok": True,
                     "respuesta": contenido,

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import json
+import re
 from typing import Any
 
 import gradio as gr
@@ -36,12 +37,61 @@ def render_eventos(eventos: list[dict[str, Any]], session_id: str = "") -> str:
         codigo = evento.get("status", resultado.get("codigo", "OK"))
         mensaje = evento.get("error") or resultado.get("mensaje", "")
         duracion = evento.get("duracion_ms")
+        detalles_rag = ""
+        if evento.get("herramienta") == "consultar_base_conocimiento":
+            candidatos = resultado.get("candidatos", [])
+            finales = resultado.get("fragmentos_finales", [])
+            metodo = resultado.get("metodo", "recuperación vectorial")
+            mensaje = f"{len(candidatos)} candidatos; {len(finales)} fragmentos finales; {metodo}."
+            clasificacion = re.search(
+                r"Clasificación:\s*(RESUELTO_POR_ASISTENTE|REQUIERE_AGENTE_HUMANO|SIN_INFORMACION_DISPONIBLE)",
+                resultado.get("respuesta", ""),
+            )
+            if clasificacion:
+                mensaje += f" Clasificación: {clasificacion.group(1)}."
+
+            def render_fragmentos(fragmentos: list[dict[str, Any]], incluir_contenido: bool) -> str:
+                filas = []
+                for fragmento in fragmentos:
+                    metadata = fragmento.get("metadata", {})
+                    etiqueta = " · ".join(
+                        str(metadata[campo])
+                        for campo in ("fuente", "seccion")
+                        if metadata.get(campo)
+                    )
+                    puntajes = []
+                    if "similitud" in metadata:
+                        puntajes.append(f"similitud {metadata['similitud']}")
+                    if "puntaje_reranker" in metadata:
+                        puntajes.append(f"reranker {metadata['puntaje_reranker']}")
+                    texto = fragmento.get("contenido", "")
+                    if not incluir_contenido:
+                        texto = texto[:240] + ("…" if len(texto) > 240 else "")
+                    filas.append(
+                        "<li><b>"
+                        + html.escape(etiqueta or "Fragmento")
+                        + "</b> <small>"
+                        + html.escape(" · ".join(puntajes))
+                        + "</small>"
+                        + (f"<p>{html.escape(texto)}</p>" if texto else "")
+                        + "</li>"
+                    )
+                return "<ol>" + "".join(filas) + "</ol>" if filas else "<p>Sin fragmentos.</p>"
+
+            detalles_rag = (
+                "<details><summary>Ver candidatos recuperados</summary>"
+                + render_fragmentos(candidatos, False)
+                + "</details><details><summary>Ver fragmentos enviados al modelo</summary>"
+                + render_fragmentos(finales, True)
+                + "</details>"
+            )
         bloques.append(
             "<div style='margin-bottom:12px;padding:10px;border:1px solid #ddd;border-radius:8px'>"
             f"<b>{i}. {html.escape(str(evento.get('herramienta')))}</b><br>"
             f"<small>{html.escape(str(codigo))}</small><br>"
             f"{html.escape(str(mensaje))}<br>"
             f"<small>{html.escape(str(duracion)) + ' ms' if duracion is not None else ''}</small>"
+            f"{detalles_rag}"
             "</div>"
         )
     bloques.append(f"<small>Sesión: {html.escape(session_id)}</small></div>")
