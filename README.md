@@ -19,7 +19,7 @@ ejecutable que sustenta las decisiones tomadas.
 | -------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Taller 1       | [taller-1](taller-1)                                 | Optimización de la atención al cliente en una empresa de comercio electrónico | Selección y justificación de un modelo de IA generativa, evaluación de fortalezas, limitaciones y riesgos éticos, e implementación de una cadena de prompts ejecutable |
 | Taller 2       | [taller-2](taller-2)                                 | Implementación de un sistema RAG para la atención al cliente de EcoMarket     | Selección de embeddings, reranker y base vectorial, construcción de la base de conocimiento e integración de un RAG con reranking, con experimento comparativo         |
-| Proyecto final | [proyecto-final-ecomarket](proyecto-final-ecomarket) | Agente de IA para la atención al cliente de EcoMarket                         | Agente con herramientas para consultas RAG, seguimiento de pedidos y gestión controlada de devoluciones                                                               |
+| Proyecto final | [proyecto-final](proyecto-final)                   | Agente de IA para la atención al cliente de EcoMarket                         | RAG del Taller 2 con reranking, tool calling con LangChain, validación determinística de devoluciones e interfaz Gradio                                                 |
 
 ## Organización
 

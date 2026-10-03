@@ -1,0 +1,138 @@
+{
+  "descripcion": "Preguntas frecuentes de atención al cliente de EcoMarket.",
+  "version": "2026-03",
+  "preguntas": [
+    {
+      "id": "01",
+      "categoria": "Cuenta",
+      "pregunta": "¿Necesito crear una cuenta para comprar en EcoMarket?",
+      "respuesta": "No es obligatorio. Puedes comprar como invitado indicando tu correo y tu dirección de entrega. Crear una cuenta te permite consultar el historial de pedidos, guardar direcciones y acumular puntos del programa Semilla."
+    },
+    {
+      "id": "02",
+      "categoria": "Cuenta",
+      "pregunta": "Olvidé mi contraseña, ¿cómo la recupero?",
+      "respuesta": "En la página de inicio de sesión selecciona «Olvidé mi contraseña» y escribe el correo con el que te registraste. Recibirás un enlace válido por 30 minutos para crear una nueva. EcoMarket nunca te pedirá tu contraseña por chat, correo ni teléfono."
+    },
+    {
+      "id": "03",
+      "categoria": "Cuenta",
+      "pregunta": "¿Cómo cambio el correo o el número de celular de mi cuenta?",
+      "respuesta": "Ingresa a «Mi cuenta > Datos personales» y edita el campo correspondiente. Por seguridad, el cambio de correo se confirma con un código que llega a la dirección anterior."
+    },
+    {
+      "id": "04",
+      "categoria": "Privacidad",
+      "pregunta": "¿Cómo solicito que eliminen mis datos personales?",
+      "respuesta": "Escribe a privacidad@ecomarket.co desde el correo registrado indicando tu solicitud. Un agente del equipo de protección de datos la atiende en un plazo máximo de 15 días hábiles, conforme a la Ley 1581 de 2012. El asistente virtual no puede eliminar datos por su cuenta."
+    },
+    {
+      "id": "05",
+      "categoria": "Pedidos",
+      "pregunta": "¿Dónde encuentro el número de seguimiento de mi pedido?",
+      "respuesta": "El número de seguimiento tiene el formato ECO-AAAA-NNNN y aparece en el correo de confirmación de compra y en «Mi cuenta > Pedidos». Con ese número puedes consultar el estado en el enlace de rastreo o preguntarle al asistente."
+    },
+    {
+      "id": "06",
+      "categoria": "Pedidos",
+      "pregunta": "¿Puedo cancelar un pedido que ya pagué?",
+      "respuesta": "Sí, siempre que el pedido siga en estado «En preparación». En ese caso el reembolso es total, incluido el costo de envío. Cuando el pedido ya fue despachado no se puede cancelar; debes esperar la entrega y solicitar la devolución según la política vigente."
+    },
+    {
+      "id": "07",
+      "categoria": "Pedidos",
+      "pregunta": "¿Puedo agregar o quitar productos de un pedido ya realizado?",
+      "respuesta": "No es posible modificar los productos de un pedido pagado. Si el pedido sigue «En preparación», puedes cancelarlo y hacer una compra nueva con los productos que necesitas."
+    },
+    {
+      "id": "08",
+      "categoria": "Productos",
+      "pregunta": "¿Cómo sé si un producto es realmente sostenible?",
+      "respuesta": "Cada ficha de producto indica el material, el origen y la certificación que lo respalda, por ejemplo FSC para madera y papel, Comercio Justo, orgánico certificado o contenido reciclado verificado. Solo publicamos productos con al menos una certificación o con trazabilidad documentada del proveedor."
+    },
+    {
+      "id": "09",
+      "categoria": "Productos",
+      "pregunta": "¿Los productos tienen garantía?",
+      "respuesta": "Todos los productos tienen la garantía legal establecida por el Estatuto del Consumidor (Ley 1480 de 2011). Los productos de electrónica cuentan con 12 meses de garantía desde la entrega. Las reclamaciones por garantía las atiende un agente humano, que valida el caso y define si procede reparación, cambio o reembolso."
+    },
+    {
+      "id": "10",
+      "categoria": "Productos",
+      "pregunta": "¿Qué pasa si el producto que quiero está agotado?",
+      "respuesta": "Activa el botón «Avísame» en la ficha del producto y te enviaremos un correo cuando vuelva a estar disponible. La reposición suele tardar entre dos y tres semanas. No es posible reservar ni pagar por adelantado productos agotados."
+    },
+    {
+      "id": "11",
+      "categoria": "Productos",
+      "pregunta": "¿Los alimentos llegan con buena fecha de vencimiento?",
+      "respuesta": "Sí. Nunca despachamos alimentos con menos de 15 días de vida útil. Si recibes un alimento vencido o próximo a vencer, tienes derecho a reposición o reembolso total sin devolver el producto, enviando una foto de la fecha impresa."
+    },
+    {
+      "id": "12",
+      "categoria": "Programa Semilla",
+      "pregunta": "¿Cómo funciona el programa de puntos Semilla?",
+      "respuesta": "Por cada 1.000 pesos de compra acumulas un punto Semilla. Cada 100 puntos equivalen a 5.000 pesos de descuento en tu siguiente compra. Los puntos se acreditan cuando el pedido queda entregado, vencen a los 12 meses y solo se acumulan con una cuenta registrada. Puedes ver tu saldo en «Mi cuenta > Puntos Semilla»."
+    },
+    {
+      "id": "13",
+      "categoria": "Programa Semilla",
+      "pregunta": "¿Puedo usar puntos Semilla y un cupón de descuento en la misma compra?",
+      "respuesta": "Sí. En cada compra puedes redimir puntos Semilla y, además, aplicar un único cupón de descuento. Los cupones no son acumulables entre sí."
+    },
+    {
+      "id": "14",
+      "categoria": "Cupones",
+      "pregunta": "¿Por qué no me funciona el cupón de descuento?",
+      "respuesta": "Revisa tres condiciones: que el cupón esté vigente, que la compra alcance el monto mínimo indicado y que los productos del carrito no pertenezcan a categorías excluidas, como las tarjetas de regalo. Si cumples las tres y el cupón sigue sin aplicarse, el asistente puede trasladar el caso a un agente."
+    },
+    {
+      "id": "15",
+      "categoria": "Sostenibilidad",
+      "pregunta": "¿Qué empaques usan para enviar los pedidos?",
+      "respuesta": "Usamos cajas de cartón reciclado, relleno de papel kraft y cinta de papel. No utilizamos plástico de un solo uso. Los alimentos perecederos viajan en empaque térmico compostable."
+    },
+    {
+      "id": "16",
+      "categoria": "Sostenibilidad",
+      "pregunta": "¿Puedo devolverles la caja en la que llegó mi pedido?",
+      "respuesta": "Sí, con el programa «Devuelve tu caja», disponible en Bogotá, Medellín y Cali. Entrega la caja vacía y plegada al repartidor de EnvíaVerde en tu siguiente entrega y recibirás 20 puntos Semilla. Este programa no está relacionado con la devolución de productos."
+    },
+    {
+      "id": "17",
+      "categoria": "Tarjetas de regalo",
+      "pregunta": "¿Cómo funcionan las tarjetas de regalo?",
+      "respuesta": "Las tarjetas de regalo son digitales, se compran por valores entre 50.000 y 500.000 pesos y se envían al correo del destinatario en la fecha que elijas. Tienen vigencia de un año desde su emisión, pueden usarse en varias compras hasta agotar el saldo y no son reembolsables."
+    },
+    {
+      "id": "18",
+      "categoria": "Atención al cliente",
+      "pregunta": "¿Cuáles son los canales y horarios de atención?",
+      "respuesta": "El asistente virtual atiende por chat las 24 horas. Los agentes humanos atienden de lunes a sábado de 7:00 a. m. a 8:00 p. m. por chat, por el correo soporte@ecomarket.co y por mensaje directo en redes sociales. Los casos trasladados fuera de ese horario se retoman al inicio de la siguiente jornada."
+    },
+    {
+      "id": "19",
+      "categoria": "Atención al cliente",
+      "pregunta": "¿Tienen tienda física donde pueda ver los productos?",
+      "respuesta": "No. EcoMarket vende exclusivamente en línea. Nuestras bodegas de Funza (Cundinamarca) y Soledad (Atlántico) no atienden público ni permiten recoger pedidos."
+    },
+    {
+      "id": "20",
+      "categoria": "Compras corporativas",
+      "pregunta": "¿Venden al por mayor o a empresas?",
+      "respuesta": "Sí. Para compras desde 20 unidades por referencia ofrecemos precios corporativos y factura a nombre de la empresa. Escribe a empresas@ecomarket.co con el listado de productos, las cantidades y la ciudad de entrega, y un asesor te enviará la cotización."
+    },
+    {
+      "id": "21",
+      "categoria": "Productos",
+      "pregunta": "¿Puedo pedir un producto personalizado o con grabado?",
+      "respuesta": "Sí, en las referencias marcadas como personalizables, como agendas y termos seleccionados. La personalización suma tres días hábiles al tiempo de alistamiento y, por tratarse de un producto hecho a la medida, no admite devolución."
+    },
+    {
+      "id": "22",
+      "categoria": "Pagos",
+      "pregunta": "¿Es seguro pagar en EcoMarket?",
+      "respuesta": "Sí. Los pagos se procesan a través de una pasarela certificada PCI DSS y EcoMarket no almacena los datos de tu tarjeta. Nunca te pediremos el número completo de la tarjeta, el código de seguridad ni claves por chat, correo o teléfono."
+    }
+  ]
+}

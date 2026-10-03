@@ -1,0 +1,204 @@
+{
+  "descripcion": "Consultas etiquetadas para medir la recuperación con y sin reranking. La relevancia es graduada: 2 = el fragmento responde directamente; 1 = el fragmento complementa la respuesta.",
+  "consultas": [
+    {
+      "id": "D01",
+      "tipo": "directa",
+      "consulta": "¿Cuánto cuesta el envío a una ciudad principal?",
+      "relevantes": {
+        "guia-costos-de-envio-1": 2
+      }
+    },
+    {
+      "id": "D02",
+      "tipo": "directa",
+      "consulta": "¿Qué categorías de productos no admiten devolución?",
+      "relevantes": {
+        "politica-categorias-que-no-admiten-devolucion-1": 2,
+        "politica-categorias-que-admiten-devolucion-1": 1
+      }
+    },
+    {
+      "id": "D03",
+      "tipo": "directa",
+      "consulta": "¿Cómo funciona el programa de puntos Semilla?",
+      "relevantes": {
+        "faq-12": 2,
+        "faq-13": 1
+      }
+    },
+    {
+      "id": "D04",
+      "tipo": "directa",
+      "consulta": "¿Cuál es el precio del kit de compostaje doméstico?",
+      "relevantes": {
+        "catalogo-hog-0501": 2
+      }
+    },
+    {
+      "id": "D05",
+      "tipo": "directa",
+      "consulta": "¿Qué métodos de pago aceptan?",
+      "relevantes": {
+        "guia-metodos-de-pago-1": 2,
+        "faq-22": 1
+      }
+    },
+    {
+      "id": "D06",
+      "tipo": "directa",
+      "consulta": "¿Cómo solicito la eliminación de mis datos personales?",
+      "relevantes": {
+        "faq-04": 2,
+        "politica-situaciones-que-requieren-intervencion-de-un-agente-humano-1": 1
+      }
+    },
+    {
+      "id": "P01",
+      "tipo": "parafrasis",
+      "consulta": "se me olvidó la clave para entrar a la página, qué hago",
+      "relevantes": {
+        "faq-02": 2
+      }
+    },
+    {
+      "id": "P02",
+      "tipo": "parafrasis",
+      "consulta": "¿en cuánto tiempo me devuelven la plata después de mandarles el producto de vuelta?",
+      "relevantes": {
+        "politica-plazos-generales-1": 2,
+        "politica-proceso-de-devolucion-1": 1,
+        "guia-reembolsos-al-medio-de-pago-1": 1
+      }
+    },
+    {
+      "id": "P03",
+      "tipo": "parafrasis",
+      "consulta": "necesito que la cuenta de cobro salga a nombre de mi empresa, ¿se puede?",
+      "relevantes": {
+        "guia-facturacion-electronica-1": 2,
+        "faq-20": 1
+      }
+    },
+    {
+      "id": "P04",
+      "tipo": "parafrasis",
+      "consulta": "me mudé y el paquete ya salió de la bodega, ¿me lo pueden llevar a la casa nueva?",
+      "relevantes": {
+        "guia-cambios-de-direccion-1": 2
+      }
+    },
+    {
+      "id": "P05",
+      "tipo": "parafrasis",
+      "consulta": "quiero dejar de usar papel film para tapar la comida, ¿qué me sirve?",
+      "relevantes": {
+        "catalogo-hog-0233": 2
+      }
+    },
+    {
+      "id": "P06",
+      "tipo": "parafrasis",
+      "consulta": "¿por qué en mi pedido dice que todavía no tiene empresa de mensajería?",
+      "relevantes": {
+        "guia-transportadoras-aliadas-1": 2,
+        "guia-tiempos-de-alistamiento-y-entrega-1": 1
+      }
+    },
+    {
+      "id": "P07",
+      "tipo": "parafrasis",
+      "consulta": "¿puedo pasar a recoger mi compra en persona a algún local?",
+      "relevantes": {
+        "faq-19": 2
+      }
+    },
+    {
+      "id": "P08",
+      "tipo": "parafrasis",
+      "consulta": "tienen algo pa la piel reseca?",
+      "relevantes": {
+        "catalogo-cui-0021": 2,
+        "catalogo-cui-0050": 1
+      }
+    },
+    {
+      "id": "X01",
+      "tipo": "distractor",
+      "consulta": "Devolví un producto porque no me gustó, ¿me reembolsan también lo que pagué de envío?",
+      "relevantes": {
+        "guia-reembolso-del-costo-de-envio-1": 2,
+        "politica-plazos-generales-1": 1
+      }
+    },
+    {
+      "id": "X02",
+      "tipo": "distractor",
+      "consulta": "¿Les puedo devolver la caja de cartón en la que me llegó el pedido?",
+      "relevantes": {
+        "faq-16": 2
+      }
+    },
+    {
+      "id": "X03",
+      "tipo": "distractor",
+      "consulta": "Me cobraron dos veces la misma compra en la tarjeta, ¿qué hago?",
+      "relevantes": {
+        "guia-pagos-rechazados-y-cobros-duplicados-1": 2,
+        "politica-situaciones-que-requieren-intervencion-de-un-agente-humano-1": 1
+      }
+    },
+    {
+      "id": "X04",
+      "tipo": "distractor",
+      "consulta": "Mi pedido lleva más de una semana de retraso, ¿me dan alguna compensación?",
+      "relevantes": {
+        "guia-retrasos-en-la-entrega-1": 2
+      }
+    },
+    {
+      "id": "X05",
+      "tipo": "multidocumento",
+      "consulta": "Si mando a grabar el termo con un nombre, ¿lo puedo devolver después si no me gusta?",
+      "relevantes": {
+        "faq-21": 2,
+        "catalogo-hog-0312": 2,
+        "politica-categorias-que-no-admiten-devolucion-1": 1
+      }
+    },
+    {
+      "id": "X06",
+      "tipo": "multidocumento",
+      "consulta": "Me llegó el desodorante con el sello roto, ¿lo puedo devolver?",
+      "relevantes": {
+        "politica-excepciones-que-siempre-aplican-1": 2,
+        "politica-categorias-que-no-admiten-devolucion-1": 1,
+        "catalogo-hig-0090": 1
+      }
+    },
+    {
+      "id": "F01",
+      "tipo": "fuera_de_alcance",
+      "consulta": "¿Tienen vacantes de trabajo en la bodega de Funza?",
+      "relevantes": {}
+    },
+    {
+      "id": "F02",
+      "tipo": "fuera_de_alcance",
+      "consulta": "¿Me recomiendan un restaurante vegetariano en Medellín?",
+      "relevantes": {}
+    },
+    {
+      "id": "F03",
+      "tipo": "fuera_de_alcance",
+      "consulta": "¿A cómo está hoy el dólar?",
+      "relevantes": {}
+    },
+    {
+      "id": "F04",
+      "tipo": "fuera_de_alcance",
+      "consulta": "¿Ustedes instalan paneles solares en el techo de las casas?",
+      "relevantes": {}
+    }
+  ]
+}
