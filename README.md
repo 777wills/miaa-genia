@@ -9,20 +9,21 @@ Inteligencia Artificial Aplicada** de la **Universidad ICESI**.
 
 ## Propósito
 
-Reunimos aquí el desarrollo de los talleres de la asignatura. Cada taller vive en su propia carpeta,
-es autocontenido y aporta tanto los documentos de análisis como el código ejecutable que sustenta
-las decisiones tomadas.
+Reunimos aquí el desarrollo de los talleres y el proyecto final de la asignatura. Cada entrega vive
+en su propia carpeta, es autocontenida y aporta tanto los documentos de análisis como el código
+ejecutable que sustenta las decisiones tomadas.
 
-## Talleres
+## Entregas
 
-| Taller | Carpeta              | Tema                                                                          | Contenido                                                                                                                                                              |
-| ------ | -------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1      | [taller-1](taller-1) | Optimización de la atención al cliente en una empresa de comercio electrónico | Selección y justificación de un modelo de IA generativa, evaluación de fortalezas, limitaciones y riesgos éticos, e implementación de una cadena de prompts ejecutable |
-| 2      | [taller-2](taller-2) | Implementación de un sistema RAG para la atención al cliente de EcoMarket     | Selección de embeddings, reranker y base vectorial, construcción de la base de conocimiento e integración de un RAG con reranking, con experimento comparativo         |
+| Entrega        | Carpeta                                              | Tema                                                                          | Contenido                                                                                                                                                              |
+| -------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Taller 1       | [taller-1](taller-1)                                 | Optimización de la atención al cliente en una empresa de comercio electrónico | Selección y justificación de un modelo de IA generativa, evaluación de fortalezas, limitaciones y riesgos éticos, e implementación de una cadena de prompts ejecutable |
+| Taller 2       | [taller-2](taller-2)                                 | Implementación de un sistema RAG para la atención al cliente de EcoMarket     | Selección de embeddings, reranker y base vectorial, construcción de la base de conocimiento e integración de un RAG con reranking, con experimento comparativo         |
+| Proyecto final | [proyecto-final-ecomarket](proyecto-final-ecomarket) | Agente de IA para la atención al cliente de EcoMarket                         | Agente con herramientas para consultas RAG, seguimiento de pedidos y gestión controlada de devoluciones                                                               |
 
 ## Organización
 
-Cada carpeta de taller sigue una estructura equivalente:
+Cada entrega sigue una estructura equivalente:
 
 ```
 taller-N/
@@ -36,7 +37,7 @@ taller-N/
 ## Convenciones
 
 - Los documentos de análisis se escriben en Markdown, para que se lean directamente en el navegador.
-- Las credenciales nunca se versionan: cada taller incluye un archivo `.env.example` como plantilla y
+- Las credenciales nunca se versionan: cada entrega incluye un archivo `.env.example` como plantilla y
   excluye el `.env` real mediante `.gitignore`.
 - Las dependencias se declaran con versiones fijadas, de modo que el código siga siendo ejecutable
   más adelante.
