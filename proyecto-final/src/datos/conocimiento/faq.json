@@ -1,0 +1,34 @@
+{
+  "preguntas": [
+    {
+      "id": "faq-1",
+      "categoria": "Devoluciones",
+      "pregunta": "¿Cuánto tiempo tengo para solicitar una devolución?",
+      "respuesta": "30 días calendario desde la fecha de entrega."
+    },
+    {
+      "id": "faq-2",
+      "categoria": "Devoluciones",
+      "pregunta": "¿El transporte de retorno tiene costo?",
+      "respuesta": "No. EcoMarket genera una guía prepagada cuando la devolución es aprobada."
+    },
+    {
+      "id": "faq-3",
+      "categoria": "Devoluciones",
+      "pregunta": "¿Cuándo recibo el reembolso?",
+      "respuesta": "Después de la revisión en bodega, el reembolso tarda entre 5 y 10 días hábiles."
+    },
+    {
+      "id": "faq-4",
+      "categoria": "Pedidos",
+      "pregunta": "¿Cómo consulto un pedido?",
+      "respuesta": "Con el número de seguimiento ECO-AAAA-NNNN."
+    },
+    {
+      "id": "faq-5",
+      "categoria": "Atención",
+      "pregunta": "¿Puedo pedir hablar con una persona?",
+      "respuesta": "Sí. Los casos complejos o sensibles pueden escalarse a un agente humano."
+    }
+  ]
+}

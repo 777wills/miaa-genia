@@ -1,0 +1,181 @@
+{
+  "descripcion": "Subconjunto reproducible del registro simulado de pedidos de EcoMarket usado en Taller 2.",
+  "moneda": "COP",
+  "fecha_corte": "2026-03-14",
+  "pedidos": [
+    {
+      "numero_seguimiento": "ECO-2026-1042",
+      "cliente": "Marcela R.",
+      "ciudad_destino": "Medellín",
+      "fecha_compra": "2026-03-01",
+      "estado": "Entregado",
+      "transportadora": "EnvíaVerde",
+      "guia_transportadora": "EV-884512003",
+      "fecha_estimada_entrega": "2026-03-05",
+      "fecha_entrega_real": "2026-03-04",
+      "url_rastreo": "https://rastreo.ecomarket.co/ECO-2026-1042",
+      "total": 184900,
+      "productos": [
+        {
+          "sku": "TEX-0031",
+          "nombre": "Camiseta de algodón orgánico",
+          "categoria": "Textiles",
+          "cantidad": 2,
+          "precio_unitario": 74900
+        },
+        {
+          "sku": "HOG-0118",
+          "nombre": "Bolsas reutilizables de malla",
+          "categoria": "Hogar",
+          "cantidad": 1,
+          "precio_unitario": 35100
+        }
+      ],
+      "observaciones": "Entrega recibida por el cliente en portería."
+    },
+    {
+      "numero_seguimiento": "ECO-2026-1087",
+      "cliente": "Julián P.",
+      "ciudad_destino": "Bogotá",
+      "fecha_compra": "2026-03-06",
+      "estado": "En tránsito",
+      "transportadora": "EnvíaVerde",
+      "guia_transportadora": "EV-884590117",
+      "fecha_estimada_entrega": "2026-03-16",
+      "fecha_entrega_real": null,
+      "url_rastreo": "https://rastreo.ecomarket.co/ECO-2026-1087",
+      "total": 129500,
+      "productos": [
+        {
+          "sku": "HOG-0204",
+          "nombre": "Set de cepillos de bambú para cocina",
+          "categoria": "Hogar",
+          "cantidad": 1,
+          "precio_unitario": 59500
+        },
+        {
+          "sku": "HOG-0077",
+          "nombre": "Detergente concentrado biodegradable",
+          "categoria": "Hogar",
+          "cantidad": 2,
+          "precio_unitario": 35000
+        }
+      ],
+      "observaciones": "Paquete en centro de distribución de Bogotá."
+    },
+    {
+      "numero_seguimiento": "ECO-2026-1235",
+      "cliente": "Paola C.",
+      "ciudad_destino": "Medellín",
+      "fecha_compra": "2026-02-20",
+      "estado": "Entregado",
+      "transportadora": "EnvíaVerde",
+      "guia_transportadora": "EV-884477302",
+      "fecha_estimada_entrega": "2026-02-25",
+      "fecha_entrega_real": "2026-02-25",
+      "url_rastreo": "https://rastreo.ecomarket.co/ECO-2026-1235",
+      "total": 159000,
+      "productos": [
+        {
+          "sku": "ELE-0009",
+          "nombre": "Cargador solar portátil 10 W",
+          "categoria": "Electrónica",
+          "cantidad": 1,
+          "precio_unitario": 159000
+        }
+      ],
+      "observaciones": "Cliente reporta funcionamiento intermitente del cargador."
+    },
+    {
+      "numero_seguimiento": "ECO-2026-1268",
+      "cliente": "Sebastián L.",
+      "ciudad_destino": "Manizales",
+      "fecha_compra": "2026-03-10",
+      "estado": "Devolución en curso",
+      "transportadora": "EnvíaVerde",
+      "guia_transportadora": "EV-884612447",
+      "fecha_estimada_entrega": "2026-03-13",
+      "fecha_entrega_real": "2026-03-12",
+      "url_rastreo": "https://rastreo.ecomarket.co/ECO-2026-1268",
+      "total": 88000,
+      "productos": [
+        {
+          "sku": "TEX-0145",
+          "nombre": "Medias de fibra de bambú (paquete x3)",
+          "categoria": "Textiles",
+          "cantidad": 1,
+          "precio_unitario": 88000
+        }
+      ],
+      "numero_devolucion": "DEV-2026-0311",
+      "observaciones": "Devolución aprobada por talla incorrecta; guía de retorno enviada al cliente."
+    },
+    {
+      "numero_seguimiento": "ECO-2026-1290",
+      "cliente": "Natalia B.",
+      "ciudad_destino": "Cartagena",
+      "fecha_compra": "2026-03-11",
+      "estado": "Cancelado",
+      "transportadora": null,
+      "guia_transportadora": null,
+      "fecha_estimada_entrega": null,
+      "fecha_entrega_real": null,
+      "url_rastreo": "https://rastreo.ecomarket.co/ECO-2026-1290",
+      "total": 121000,
+      "productos": [
+        {
+          "sku": "HOG-0204",
+          "nombre": "Set de cepillos de bambú para cocina",
+          "categoria": "Hogar",
+          "cantidad": 1,
+          "precio_unitario": 59500
+        },
+        {
+          "sku": "HOG-0077",
+          "nombre": "Detergente concentrado biodegradable",
+          "categoria": "Hogar",
+          "cantidad": 1,
+          "precio_unitario": 61500
+        }
+      ],
+      "observaciones": "Cancelado a solicitud del cliente antes del despacho; reembolso aplicado el 2026-03-12."
+    },
+    {
+      "numero_seguimiento": "ECO-2026-1372",
+      "cliente": "Hernán D.",
+      "ciudad_destino": "Villavicencio",
+      "fecha_compra": "2026-03-04",
+      "estado": "Entregado",
+      "transportadora": "EnvíaVerde",
+      "guia_transportadora": "EV-884588210",
+      "fecha_estimada_entrega": "2026-03-10",
+      "fecha_entrega_real": "2026-03-10",
+      "url_rastreo": "https://rastreo.ecomarket.co/ECO-2026-1372",
+      "total": 143200,
+      "productos": [
+        {
+          "sku": "ALI-0455",
+          "nombre": "Café de origen tostado en grano 500 g",
+          "categoria": "Alimentos perecederos",
+          "cantidad": 1,
+          "precio_unitario": 48100
+        },
+        {
+          "sku": "HIG-0090",
+          "nombre": "Desodorante natural en barra",
+          "categoria": "Higiene personal",
+          "cantidad": 1,
+          "precio_unitario": 29350
+        },
+        {
+          "sku": "TEX-0088",
+          "nombre": "Tote bag de lona reciclada",
+          "categoria": "Textiles",
+          "cantidad": 1,
+          "precio_unitario": 65750
+        }
+      ],
+      "observaciones": "Entrega sin novedad."
+    }
+  ]
+}

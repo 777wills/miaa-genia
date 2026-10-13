@@ -1,0 +1,9 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+src/indice/
+src/runtime/*.json
+outputs/*.jsonl
+!outputs/evidencia-rubrica-gemini.jsonl
+.DS_Store
