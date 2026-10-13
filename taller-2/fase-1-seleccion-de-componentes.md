@@ -23,7 +23,7 @@ trae tres problemas:
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | El prompt crece con cada documento nuevo      | El costo por consulta sube de forma lineal con el tamaño de la base documental, no con la dificultad del caso        |
 | El modelo recibe mucho texto que no aplica    | Aumenta el riesgo de que mezcle reglas de temas vecinos (por ejemplo, devolución de productos y reembolso del envío) |
-| No hay una señal de «esto no está en la base» | El modelo tiende a completar con conocimiento general, justo la alucinación que el Taller 1 buscaba evitar           |
+| No hay una señal de «esto no está en la base» | El modelo tiende a completar con conocimiento general                                                                |
 
 Un sistema RAG resuelve estos tres puntos: guarda la base documental en un índice consultable, le
 entrega al modelo solo los fragmentos pertinentes para cada consulta y, al medir la relevancia de lo

@@ -32,8 +32,8 @@ generativo.
 ## 2. Los pasos del flujo RAG en nuestra implementación
 
 Un sistema RAG se organiza en una secuencia de pasos: preparar la base de conocimiento, segmentar,
-vectorizar, indexar, recuperar, reordenar los candidatos y generar la respuesta. Seguimos la
-arquitectura en tres etapas que trabajamos en clase: recuperación rápida con un bi-encoder,
+vectorizar, indexar, recuperar, reordenar los candidatos y generar la respuesta. Una
+arquitectura en tres etapas: recuperación rápida con un bi-encoder,
 reordenamiento preciso con un cross-encoder y generación con el contexto resultante. La
 implementamos con LangChain y le añadimos lo que exige el caso de EcoMarket: documentos
 heterogéneos, recuperación exacta de pedidos y un umbral de abstención.
