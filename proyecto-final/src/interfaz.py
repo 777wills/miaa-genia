@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import json
+import logging
 import re
 from typing import Any
 
@@ -9,6 +10,12 @@ import gradio as gr
 
 from agent import IrisAgent
 from devoluciones import reset_runtime
+
+LOGGER = logging.getLogger("iris.interfaz")
+MENSAJE_ERROR = (
+    "No fue posible procesar tu mensaje en este momento. "
+    "Intenta de nuevo en unos minutos o escribe a soporte de EcoMarket."
+)
 
 TITULO = "# Iris · Agente de devoluciones de EcoMarket"
 SUBTITULO = (
@@ -38,7 +45,7 @@ def render_eventos(eventos: list[dict[str, Any]], session_id: str = "") -> str:
         mensaje = evento.get("error") or resultado.get("mensaje", "")
         duracion = evento.get("duracion_ms")
         detalles_rag = ""
-        if evento.get("herramienta") == "consultar_base_conocimiento":
+        if evento.get("herramienta") == "consultar_base_conocimiento" and resultado.get("ok", True):
             candidatos = resultado.get("candidatos", [])
             finales = resultado.get("fragmentos_finales", [])
             metodo = resultado.get("metodo", "recuperación vectorial")
@@ -97,34 +104,30 @@ def render_eventos(eventos: list[dict[str, Any]], session_id: str = "") -> str:
     bloques.append(f"<small>Sesión: {html.escape(session_id)}</small></div>")
     return "".join(bloques)
 
-def responder(mensaje: str, chat: list[dict], historial: list):
+def recibir(mensaje: str, chat: list[dict]):
     mensaje = (mensaje or "").strip()
     if not mensaje:
-        return chat, "", render_eventos([]), historial
+        return chat, "", ""
+    return [*chat, {"role": "user", "content": mensaje}], "", mensaje
 
-    chat = [*chat, {"role": "user", "content": mensaje}]
+def responder(mensaje: str, chat: list[dict]):
+    if not mensaje:
+        return chat, render_eventos([])
     try:
-        resultado = obtener_agente().responder(
-            mensaje,
-            [tuple(x) for x in historial[-4:]],
-        )
+        resultado = obtener_agente().responder(mensaje)
         respuesta = resultado["respuesta"]
         panel = render_eventos(resultado["eventos"], resultado["session_id"])
-    except Exception as error:
-        respuesta = (
-            "No fue posible ejecutar el agente. "
-            f"Revisa la configuración de Gemini. Detalle: {type(error).__name__}: {error}"
-        )
+    except Exception:
+        LOGGER.exception("Falló la ejecución del agente")
+        respuesta = MENSAJE_ERROR
         panel = render_eventos([])
 
-    chat.append({"role": "assistant", "content": respuesta})
-    historial = [*historial, [mensaje, respuesta]]
-    return chat, "", panel, historial
+    return [*chat, {"role": "assistant", "content": respuesta}], panel
 
 def limpiar():
     global AGENTE
     AGENTE = None
-    return [], "", render_eventos([]), []
+    return [], "", render_eventos([])
 
 def reiniciar_demo():
     reset_runtime()
@@ -134,7 +137,7 @@ def construir_interfaz():
     with gr.Blocks(title="Iris · EcoMarket") as demo:
         gr.Markdown(TITULO)
         gr.Markdown(SUBTITULO)
-        historial = gr.State([])
+        pendiente = gr.State("")
 
         with gr.Row():
             with gr.Column(scale=3):
@@ -155,22 +158,24 @@ def construir_interfaz():
             examples=[
                 ["¿Cuánto tiempo tengo para solicitar una devolución?"],
                 ["¿Qué productos tiene el pedido ECO-2026-1042?"],
-                ["Quiero devolver la camiseta de algodón orgánico del pedido ECO-2026-1042. El SKU es TEX-0031, está sin uso, conserva las etiquetas y fue un cambio de talla."],
+                ["Quiero devolver la camiseta de algodón orgánico del pedido ECO-2026-1042. El SKU es TEX-0031, está sin uso, conserva las etiquetas adheridas, no tiene olores ni manchas y fue un cambio de talla."],
                 ["Quiero devolver HOG-0204 del pedido ECO-2026-1087 porque cambié de opinión."],
                 ["El café ALI-0455 del pedido ECO-2026-1372 llegó con el empaque roto."],
                 ["Genera otra devolución para TEX-0145 del pedido ECO-2026-1268."],
             ],
             inputs=entrada,
+            label="Ejemplos",
         )
 
-        inputs = [entrada, chat, historial]
-        outputs = [chat, entrada, panel, historial]
-        entrada.submit(responder, inputs, outputs)
-        enviar.click(responder, inputs, outputs)
-        borrar.click(limpiar, outputs=outputs)
+        for evento in (entrada.submit, enviar.click):
+            evento(recibir, [entrada, chat], [chat, entrada, pendiente]).then(
+                responder, [pendiente, chat], [chat, panel]
+            )
+        borrar.click(limpiar, outputs=[chat, entrada, panel])
         reset.click(reiniciar_demo, outputs=estado_reset)
 
     return demo
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.WARNING)
     construir_interfaz().queue().launch(server_name="127.0.0.1")

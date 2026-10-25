@@ -53,6 +53,23 @@ class TestPanelActividad(unittest.TestCase):
         self.assertNotIn("<script>", panel)
         self.assertIn("&lt;script&gt;", panel)
 
+    def test_error_del_rag_muestra_el_motivo_y_no_el_resumen_de_recuperacion(self):
+        panel = render_eventos(
+            [
+                {
+                    "herramienta": "consultar_base_conocimiento",
+                    "status": "ERROR_HERRAMIENTA",
+                    "error": "RuntimeError: El índice vectorial está vacío.",
+                    "duracion_ms": 3.0,
+                    "resultado": {"ok": False, "codigo": "ERROR_HERRAMIENTA"},
+                }
+            ],
+            "session-2",
+        )
+
+        self.assertIn("El índice vectorial está vacío.", panel)
+        self.assertNotIn("candidatos", panel)
+
 
 if __name__ == "__main__":
     unittest.main()

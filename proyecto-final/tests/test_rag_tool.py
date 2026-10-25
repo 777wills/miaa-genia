@@ -1,7 +1,7 @@
+import importlib
+import json
 import sys
 import unittest
-import importlib.util
-import importlib
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 from unittest.mock import patch
@@ -9,25 +9,11 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-module_names = ("tools", "rag", "langchain_core", "langchain_core.tools")
+module_names = ("tools", "rag")
 previous_modules = {name: sys.modules.get(name) for name in module_names}
 
-if importlib.util.find_spec("langchain_core") is None:
-    langchain_core = ModuleType("langchain_core")
-    langchain_core.__path__ = []
-    langchain_tools = ModuleType("langchain_core.tools")
-
-    def tool(function):
-        function.name = function.__name__
-        function.invoke = lambda arguments: function(**arguments)
-        return function
-
-    langchain_tools.tool = tool
-    sys.modules["langchain_core"] = langchain_core
-    sys.modules["langchain_core.tools"] = langchain_tools
-
-rag_stub = ModuleType("rag")
-sys.modules["rag"] = rag_stub
+# Se sustituye rag para no cargar modelos ni el índice al importar las herramientas.
+sys.modules["rag"] = ModuleType("rag")
 sys.modules.pop("tools", None)
 
 try:
@@ -60,14 +46,38 @@ class TestHerramientaRag(unittest.TestCase):
         )
 
         with patch.object(tools_module, "_cadena_rag", return_value=cadena):
-            resultado = consultar_base_conocimiento.invoke({"consulta": "plazo devolución"})
+            mensaje = consultar_base_conocimiento.invoke(
+                {
+                    "name": "consultar_base_conocimiento",
+                    "args": {"consulta": "plazo devolución"},
+                    "id": "call-rag",
+                    "type": "tool_call",
+                }
+            )
 
-        self.assertTrue(resultado["ok"])
-        self.assertEqual(resultado["metodo"], "chroma_bge_reranker")
-        self.assertEqual(resultado["candidatos"][0]["metadata"]["similitud"], 0.83)
+        contenido = json.loads(mensaje.content)
+        self.assertTrue(contenido["ok"])
+        self.assertEqual(contenido["respuesta"], "El plazo es de 30 días.")
+        self.assertEqual(contenido["fragmentos"][0]["fuente"], "politica-devoluciones.md")
+        self.assertNotIn("candidatos", contenido)
+
+        artefacto = mensaje.artifact
+        self.assertEqual(artefacto["metodo"], "chroma_bge_reranker")
+        self.assertEqual(artefacto["candidatos"][0]["metadata"]["similitud"], 0.83)
         self.assertEqual(
-            resultado["fragmentos_finales"][0]["metadata"]["puntaje_reranker"], 0.91
+            artefacto["fragmentos_finales"][0]["metadata"]["puntaje_reranker"], 0.91
         )
+
+    def test_verificacion_expone_condiciones_booleanas_opcionales(self):
+        esquema = tools_module.verificar_elegibilidad_devolucion.args
+        self.assertEqual(
+            set(esquema) - {"numero_pedido", "sku", "motivo"},
+            {
+                "sin_uso", "conserva_etiquetas", "sin_olores_ni_manchas", "conserva_empaque",
+                "accesorios_completos", "conserva_cables_y_manual", "sin_marcas_escritura",
+            },
+        )
+        self.assertIn("etiquetas", esquema["conserva_etiquetas"]["description"])
 
 
 if __name__ == "__main__":
