@@ -20,14 +20,29 @@ CASES = {
     case["id"]: case
     for case in json.loads((ROOT / "tests" / "casos_agente.json").read_text(encoding="utf-8"))
 }
-EVIDENCE_PATH = ROOT / "outputs" / "evidencia-rubrica-gemini.jsonl"
+EVIDENCE_PATH = ROOT / "outputs" / "evidencia-agente-gemini.jsonl"
+ACCIONES = ("verificar_elegibilidad_devolucion", "generar_etiqueta_devolucion", "registrar_devolucion")
+
+
+def etiquetas_generadas(events):
+    return [
+        event for event in events
+        if event["herramienta"] == "generar_etiqueta_devolucion" and event["resultado"].get("ok") is True
+    ]
+
+
+def verificacion(events):
+    return next(
+        (event["resultado"] for event in events if event["herramienta"] == "verificar_elegibilidad_devolucion"),
+        {},
+    )
 
 
 @unittest.skipUnless(
     RUN_E2E,
     "Define RUN_GEMINI_E2E=1 y GEMINI_API_KEY en .env para las pruebas reales de Gemini.",
 )
-class TestRubricaGeminiE2E(unittest.TestCase):
+class TestAgenteGeminiE2E(unittest.TestCase):
     def ejecutar_caso(self, case_id: str):
         from agent import IrisAgent
         import devoluciones
@@ -35,7 +50,7 @@ class TestRubricaGeminiE2E(unittest.TestCase):
         case = CASES[case_id]
         with tempfile.TemporaryDirectory(prefix=f"ecomarket-{case_id}-") as temp_dir:
             with patch.object(devoluciones, "DEFAULT_STATE_DIR", Path(temp_dir)):
-                agent = IrisAgent(session_id=f"rubrica-{case_id}-{uuid.uuid4().hex[:6]}")
+                agent = IrisAgent(session_id=f"e2e-{case_id}-{uuid.uuid4().hex[:6]}")
                 result = agent.responder(case["prompt"])
 
         return case, result
@@ -87,16 +102,18 @@ class TestRubricaGeminiE2E(unittest.TestCase):
         _case, result = self.ejecutar_caso("D")
         events = result["eventos"]
         tools = [event["herramienta"] for event in events]
+        exitosos = [
+            event for event in events
+            if event["herramienta"] in ACCIONES
+            and event["status"] in ("ELEGIBLE", "ETIQUETA_GENERADA", "REGISTRADA")
+        ]
+        # Una verificación previa con condiciones incompletas es válida si el agente la corrige.
         passed = (
             result["ok"]
-            and tools == [
-                "verificar_elegibilidad_devolucion",
-                "generar_etiqueta_devolucion",
-                "registrar_devolucion",
-            ]
-            and events[0]["resultado"].get("elegible") is True
-            and events[1]["resultado"].get("ok") is True
-            and events[2]["resultado"].get("codigo") == "REGISTRADA"
+            and [event["status"] for event in exitosos] == ["ELEGIBLE", "ETIQUETA_GENERADA", "REGISTRADA"]
+            and exitosos[1]["argumentos"].get("codigo_autorizacion")
+            == exitosos[0]["resultado"].get("codigo_autorizacion")
+            and len(etiquetas_generadas(events)) == 1
         )
         self.comprobar("D", passed, result, f"tools={tools}")
 
@@ -105,8 +122,8 @@ class TestRubricaGeminiE2E(unittest.TestCase):
         events = result["eventos"]
         lookup = next((event["resultado"] for event in events if event["herramienta"] == "consultar_pedido"), {})
         tools = [event["herramienta"] for event in events]
-        passed = result["ok"] and lookup.get("ok") is False and lookup.get("error") == "PEDIDO_NO_EXISTE"
-        self.comprobar("E", passed, result, f"tools={tools}; error={lookup.get('error')}")
+        passed = result["ok"] and lookup.get("ok") is False and lookup.get("codigo") == "PEDIDO_NO_EXISTE"
+        self.comprobar("E", passed, result, f"tools={tools}; codigo={lookup.get('codigo')}")
 
     def test_f_categoria_no_retornable_no_genera_etiqueta(self):
         _case, result = self.ejecutar_caso("F")
@@ -123,12 +140,18 @@ class TestRubricaGeminiE2E(unittest.TestCase):
     def test_g_devolucion_existente_bloquea_segunda_etiqueta(self):
         _case, result = self.ejecutar_caso("G")
         events = result["eventos"]
-        verification = next((event["resultado"] for event in events if event["herramienta"] == "verificar_elegibilidad_devolucion"), {})
+        verification = verificacion(events)
+        lookup = next((event["resultado"] for event in events if event["herramienta"] == "consultar_pedido"), {})
         tools = [event["herramienta"] for event in events]
+        detectada = (
+            verification.get("codigo") == "DEVOLUCION_EXISTENTE"
+            or lookup.get("numero_devolucion") == "DEV-2026-0311"
+        )
         passed = (
             result["ok"]
-            and verification.get("codigo") == "DEVOLUCION_EXISTENTE"
-            and "generar_etiqueta_devolucion" not in tools
+            and detectada
+            and "DEV-2026-0311" in result["respuesta"]
+            and not etiquetas_generadas(events)
         )
         self.comprobar("G", passed, result, f"tools={tools}; verificación={verification.get('codigo')}")
 
@@ -163,6 +186,70 @@ class TestRubricaGeminiE2E(unittest.TestCase):
         )
         tools = [event["herramienta"] for event in events]
         self.comprobar("H", passed, result, f"tools={tools}; successful_labels={sum(event['resultado'].get('ok') is True for _, event in labels)}")
+
+    def test_i_pedido_no_entregado_detiene_la_devolucion(self):
+        _case, result = self.ejecutar_caso("I")
+        events = result["eventos"]
+        check = verificacion(events)
+        tools = [event["herramienta"] for event in events]
+        passed = (
+            result["ok"]
+            and check.get("codigo") == "PEDIDO_NO_ENTREGADO"
+            and not etiquetas_generadas(events)
+        )
+        self.comprobar("I", passed, result, f"tools={tools}; verificación={check.get('codigo')}")
+
+    def test_j_excepcion_se_deriva_a_una_persona(self):
+        _case, result = self.ejecutar_caso("J")
+        events = result["eventos"]
+        check = verificacion(events)
+        tools = [event["herramienta"] for event in events]
+        passed = (
+            result["ok"]
+            and check.get("codigo") == "EXCEPCION_ECOMARKET"
+            and check.get("requiere_agente_humano") is True
+            and not etiquetas_generadas(events)
+        )
+        self.comprobar("J", passed, result, f"tools={tools}; verificación={check.get('codigo')}")
+
+    def test_k_condicion_faltante_se_pide_sin_generar_etiqueta(self):
+        _case, result = self.ejecutar_caso("K")
+        events = result["eventos"]
+        check = verificacion(events)
+        tools = [event["herramienta"] for event in events]
+        respuesta = result["respuesta"].lower()
+        pide_dato = "olor" in respuesta or "mancha" in respuesta
+        verificacion_correcta = not check or (
+            check.get("codigo") == "CONDICION_INSUFICIENTE"
+            and "sin_olores_ni_manchas" in check.get("requisitos_faltantes", [])
+        )
+        passed = result["ok"] and verificacion_correcta and pide_dato and not etiquetas_generadas(events)
+        self.comprobar("K", passed, result, f"tools={tools}; verificación={check.get('codigo')}; pide_dato={pide_dato}")
+
+    def test_interfaz_responde_de_extremo_a_extremo(self):
+        import devoluciones
+        import interfaz
+        from agent import IrisAgent
+
+        with tempfile.TemporaryDirectory(prefix="ecomarket-ui-") as temp_dir:
+            with patch.object(devoluciones, "DEFAULT_STATE_DIR", Path(temp_dir)):
+                interfaz.AGENTE = IrisAgent(session_id=f"e2e-ui-{uuid.uuid4().hex[:6]}")
+                chat, entrada, pendiente = interfaz.recibir(CASES["C"]["prompt"], [])
+                visible = list(chat)
+                chat, panel = interfaz.responder(pendiente, chat)
+                interfaz.AGENTE = None
+
+        respuesta = chat[-1]["content"]
+        passed = (
+            entrada == ""
+            and visible[-1] == {"role": "user", "content": CASES["C"]["prompt"]}
+            and chat[-1]["role"] == "assistant"
+            and respuesta != interfaz.MENSAJE_ERROR
+            and "camiseta" in respuesta.lower()
+            and "consultar_pedido" in panel
+        )
+        result = {"eventos": [{"herramienta": "consultar_pedido", "status": "PEDIDO_ENCONTRADO"}] if "consultar_pedido" in panel else []}
+        self.comprobar("UI", passed, result, "interfaz: mensaje visible al enviar, respuesta y panel actualizados")
 
 
 if __name__ == "__main__":

@@ -12,12 +12,23 @@ DATOS_DIR = BASE_DIR / "datos"
 DEFAULT_STATE_DIR = BASE_DIR / "runtime"
 PEDIDOS_PATH = DATOS_DIR / "pedidos.json"
 
-CATEGORIAS_RETORNABLES = {
-    "Hogar",
-    "Textiles",
-    "Electrónica",
-    "Papelería y oficina",
+CONDICIONES = {
+    "sin_uso": "está sin uso",
+    "conserva_etiquetas": "conserva las etiquetas adheridas",
+    "sin_olores_ni_manchas": "no tiene olores ni manchas",
+    "conserva_empaque": "conserva el empaque original",
+    "accesorios_completos": "tiene los accesorios completos",
+    "conserva_cables_y_manual": "conserva los cables y el manual",
+    "sin_marcas_escritura": "no tiene marcas de escritura",
 }
+# El número de serie de Electrónica lo verifica EcoMarket al recibir el producto, no el cliente.
+REQUISITOS_POR_CATEGORIA = {
+    "Hogar": ("sin_uso", "conserva_empaque", "accesorios_completos"),
+    "Textiles": ("sin_uso", "conserva_etiquetas", "sin_olores_ni_manchas"),
+    "Electrónica": ("conserva_empaque", "conserva_cables_y_manual"),
+    "Papelería y oficina": ("sin_uso", "sin_marcas_escritura"),
+}
+CATEGORIAS_RETORNABLES = set(REQUISITOS_POR_CATEGORIA)
 CATEGORIAS_NO_RETORNABLES = {
     "Alimentos perecederos",
     "Higiene personal",
@@ -85,43 +96,21 @@ def _requiere_humano(motivo: str) -> bool:
     texto = _normalizar(motivo)
     return any(palabra in texto for palabra in MOTIVOS_HUMANOS)
 
-def _condicion_cumplida(condicion: str, categoria: str) -> bool:
-    texto = _normalizar(condicion)
-    requisitos = {
-        "Textiles": ("sin uso", "etiquet"),
-        "Hogar": ("sin uso", "empaque original", "accesorios completos"),
-        "Electrónica": (
-            "empaque", "cable", "manual", "serie", "verificad",
-        ),
-        "Papelería y oficina": ("sin uso", "sin marcas de escritura"),
-    }
-    if categoria not in requisitos or not all(item in texto for item in requisitos[categoria]):
-        return False
-    if categoria == "Textiles":
-        if not _ausencia_de(texto, "olor") or not _ausencia_de(texto, "mancha"):
-            return False
+def _evaluar_condiciones(
+    categoria: str, condiciones: dict[str, bool | None]
+) -> tuple[list[str], list[str]]:
+    """Devuelve (faltantes, incumplidos): None significa no informado; False, no cumple."""
+    faltantes, incumplidos = [], []
+    for requisito in REQUISITOS_POR_CATEGORIA[categoria]:
+        valor = condiciones.get(requisito)
+        if valor is None:
+            faltantes.append(requisito)
+        elif valor is False:
+            incumplidos.append(requisito)
+    return faltantes, incumplidos
 
-    condiciones_negadas = (
-        "sin etiqueta", "etiquetas retiradas", "con olor", "con olores", "con manchas",
-        "sin empaque",
-        "empaque danado", "empaque roto", "empaque original danado", "empaque original roto",
-        "accesorios incompletos", "faltan accesorios", "sin cable", "sin cables", "sin manual",
-        "serie no verificada", "serie no verificado", "no se verifico la serie",
-        "con marcas de escritura", "producto usado",
-    )
-    return not any(item in texto for item in condiciones_negadas)
-
-def _ausencia_de(texto: str, termino: str) -> bool:
-    return any(
-        frase in texto
-        for frase in (
-            f"sin {termino}",
-            f"ni {termino}",
-            f"no tiene {termino}",
-            f"no presenta {termino}",
-            f"libre de {termino}",
-        )
-    )
+def _describir(requisitos: list[str]) -> str:
+    return "; ".join(CONDICIONES[requisito] for requisito in requisitos)
 
 def _runtime(state_dir: Path | None) -> Path:
     return state_dir or DEFAULT_STATE_DIR
@@ -132,9 +121,10 @@ def _path(state_dir: Path | None, name: str) -> Path:
 def consultar_pedido(numero_pedido: str) -> dict[str, Any]:
     pedido = obtener_pedido(numero_pedido)
     if not pedido:
-        return {"ok": False, "error": "PEDIDO_NO_EXISTE", "mensaje": "No existe ese número de seguimiento."}
-    return {
+        return {"ok": False, "codigo": "PEDIDO_NO_EXISTE", "mensaje": "No existe ese número de seguimiento."}
+    resultado = {
         "ok": True,
+        "codigo": "PEDIDO_ENCONTRADO",
         "numero_pedido": pedido["numero_seguimiento"],
         "estado": pedido["estado"],
         "fecha_entrega_real": pedido.get("fecha_entrega_real"),
@@ -145,12 +135,18 @@ def consultar_pedido(numero_pedido: str) -> dict[str, Any]:
         ],
         "numero_devolucion": pedido.get("numero_devolucion"),
     }
+    if pedido.get("numero_devolucion"):
+        resultado["mensaje"] = (
+            f"El pedido ya tiene la devolución {pedido['numero_devolucion']} en curso. "
+            "No se puede iniciar otra devolución para este pedido."
+        )
+    return resultado
 
 def verificar_elegibilidad(
     numero_pedido: str,
     sku: str,
     motivo: str,
-    condicion_producto: str = "",
+    condiciones: dict[str, bool | None] | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     pedido = obtener_pedido(numero_pedido)
@@ -226,7 +222,6 @@ def verificar_elegibilidad(
             "categoria": categoria,
         }
 
-    condicion = condicion_producto.lower().strip()
     if categoria in CATEGORIAS_NO_RETORNABLES:
         return {
             "ok": True, "elegible": False, "requiere_agente_humano": False,
@@ -243,27 +238,27 @@ def verificar_elegibilidad(
             "mensaje": "La categoría no tiene una regla automática definida y debe revisarse manualmente.",
         }
 
-    if categoria == "Textiles":
-        cumple = _condicion_cumplida(condicion, categoria)
-        mensaje_condicion = "Para textiles se debe confirmar que está sin uso, conserva las etiquetas adheridas y no tiene olores ni manchas."
-    elif categoria == "Hogar":
-        cumple = _condicion_cumplida(condicion, categoria)
-        mensaje_condicion = "Para productos de Hogar se debe confirmar que están sin uso, con empaque original y accesorios completos."
-    elif categoria == "Electrónica":
-        cumple = _condicion_cumplida(condicion, categoria)
-        mensaje_condicion = "Para Electrónica se debe confirmar que conserva empaque, cables y manual, y que se verificó el número de serie."
-    elif categoria == "Papelería y oficina":
-        cumple = _condicion_cumplida(condicion, categoria)
-        mensaje_condicion = "Para Papelería y oficina se debe confirmar que está sin uso y sin marcas de escritura."
-    else:
-        cumple = False
-        mensaje_condicion = "No fue posible validar automáticamente la condición del producto."
-
-    if not cumple:
+    faltantes, incumplidos = _evaluar_condiciones(categoria, condiciones or {})
+    if incumplidos:
+        return {
+            "ok": True, "elegible": False, "requiere_agente_humano": False,
+            "codigo": "CONDICION_NO_CUMPLIDA",
+            "mensaje": (
+                f"Para la categoría '{categoria}' el producto debe cumplir: {_describir(incumplidos)}. "
+                "Sin esa condición no procede la devolución ordinaria."
+            ),
+            "requisitos_incumplidos": incumplidos,
+        }
+    if faltantes:
         return {
             "ok": True, "elegible": False, "requiere_agente_humano": False,
             "codigo": "CONDICION_INSUFICIENTE",
-            "mensaje": mensaje_condicion,
+            "mensaje": f"Falta confirmar que el producto {_describir(faltantes)}.",
+            "siguiente_paso": (
+                "Si el cliente ya lo dijo en la conversación, vuelve a verificar con esa condición en true; "
+                "si no, pregúntale solo por ella."
+            ),
+            "requisitos_faltantes": faltantes,
         }
 
     base_token = f"{pedido['numero_seguimiento']}|{producto['sku']}|{motivo}|{cargar_base().get('fecha_corte')}"
@@ -307,11 +302,22 @@ def generar_etiqueta(codigo_autorizacion: str, state_dir: Path | None = None) ->
 
     for etiqueta in etiquetas.values():
         if etiqueta["numero_pedido"] == autorizacion["numero_pedido"] and etiqueta["sku"] == autorizacion["sku"]:
+            if etiqueta["estado"] == "Generada":
+                autorizacion["consumida"] = True
+                _escribir_json(_path(state_dir, "autorizaciones.json"), autorizaciones)
+                return {
+                    "ok": True, "codigo": "ETIQUETA_PENDIENTE_REGISTRO",
+                    "mensaje": "Ya existía una etiqueta para este producto; falta registrarla.",
+                    **_datos_etiqueta(etiqueta),
+                }
             return {
                 "ok": False, "codigo": "ETIQUETA_EXISTENTE",
-                "mensaje": f"Ya existe una etiqueta para el caso {etiqueta['numero_caso']}.",
+                "mensaje": f"Ya existe una etiqueta registrada para el caso {etiqueta['numero_caso']}.",
             }
 
+    instruccion = "Empaca el producto y entrégalo en un punto autorizado dentro de los próximos 8 días calendario."
+    if autorizacion.get("categoria") == "Electrónica":
+        instruccion += " EcoMarket verificará el número de serie al recibir el producto."
     etiquetas[numero_etiqueta] = {
         "numero_caso": numero_caso,
         "numero_etiqueta": numero_etiqueta,
@@ -319,6 +325,7 @@ def generar_etiqueta(codigo_autorizacion: str, state_dir: Path | None = None) ->
         "sku": autorizacion["sku"],
         "producto": autorizacion["producto"],
         "transportadora": "EnvíaVerde",
+        "instruccion": instruccion,
         "estado": "Generada",
     }
     autorizacion["consumida"] = True
@@ -327,12 +334,18 @@ def generar_etiqueta(codigo_autorizacion: str, state_dir: Path | None = None) ->
 
     return {
         "ok": True,
-        "numero_caso": numero_caso,
-        "numero_etiqueta": numero_etiqueta,
-        "numero_pedido": autorizacion["numero_pedido"],
-        "sku": autorizacion["sku"],
-        "transportadora": "EnvíaVerde",
-        "instruccion": "Empaca el producto y entrégalo en un punto autorizado dentro de los próximos 8 días calendario.",
+        "codigo": "ETIQUETA_GENERADA",
+        "mensaje": f"Etiqueta {numero_etiqueta} generada para el caso {numero_caso}.",
+        **_datos_etiqueta(etiquetas[numero_etiqueta]),
+    }
+
+def _datos_etiqueta(etiqueta: dict[str, Any]) -> dict[str, Any]:
+    return {
+        campo: etiqueta[campo]
+        for campo in (
+            "numero_caso", "numero_etiqueta", "numero_pedido", "sku", "transportadora", "instruccion",
+        )
+        if campo in etiqueta
     }
 
 def registrar_devolucion(numero_etiqueta: str, state_dir: Path | None = None) -> dict[str, Any]:

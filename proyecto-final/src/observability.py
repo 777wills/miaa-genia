@@ -12,7 +12,7 @@ def _sanitizar(value: Any):
     if isinstance(value, dict):
         bloqueadas = {
             "cliente", "direccion", "telefono", "correo", "email", "numero_pedido",
-            "consulta", "motivo", "condicion_producto",
+            "consulta", "motivo",
         }
         return {k: ("***" if k.lower() in bloqueadas else _sanitizar(v)) for k, v in value.items()}
     if isinstance(value, list):

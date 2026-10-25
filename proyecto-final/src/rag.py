@@ -257,7 +257,7 @@ def abrir_almacen() -> Chroma:
 def obtener_almacen() -> Chroma:
     almacen = abrir_almacen()
     if not almacen.get(limit=1)["ids"]:
-        raise SystemExit("El índice vectorial está vacío. Ejecuta primero: python src/indexar.py")
+        raise RuntimeError("El índice vectorial está vacío. Ejecuta primero: python src/indexar.py")
     return almacen
 
 
@@ -421,7 +421,7 @@ def construir_llm(general: dict[str, Any]) -> ChatGoogleGenerativeAI:
     load_dotenv(ARCHIVO_ENTORNO)
     clave = os.getenv("GEMINI_API_KEY")
     if not clave:
-        raise SystemExit(
+        raise RuntimeError(
             "Falta la variable GEMINI_API_KEY. Copia .env.example a .env y escribe allí tu clave."
         )
     return ChatGoogleGenerativeAI(
