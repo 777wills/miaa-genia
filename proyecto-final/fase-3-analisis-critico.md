@@ -27,7 +27,7 @@ para informarse, y el agente interpreta la pregunta como una solicitud y emite l
 autorización sirve una sola vez, el registro exige una etiqueta válida y un producto con devolución
 registrada no puede iniciar otra.
 
-**Riesgo residual.** Esos controles impiden acciones *inválidas*, no acciones *no deseadas*: si la
+**Riesgo residual.** Esos controles impiden acciones _inválidas_, no acciones _no deseadas_: si la
 devolución cumple las reglas, el agente puede completarla aunque el cliente solo estuviera
 preguntando. La mitigación de fondo es la confirmación previa que proponemos en la sección 4.1.
 
@@ -51,7 +51,7 @@ respalda cada condición, para auditarla, y comparar por muestreo los argumentos
 
 ### 2.3 La condición del producto la declara el cliente
 
-Aunque el modelo extraiga bien los datos, la condición sigue siendo lo que el cliente *dice*. Un
+Aunque el modelo extraiga bien los datos, la condición sigue siendo lo que el cliente _dice_. Un
 cliente puede afirmar que una prenda está sin uso para obtener la etiqueta. El agente no tiene cómo
 comprobarlo, y no debería pretender hacerlo.
 
@@ -152,28 +152,28 @@ el log, pero en producción haría falta reintentos con espera y un modelo de re
 
 ### 3.1 Lo que ya está implementado
 
-| Componente | Qué hace |
-|---|---|
+| Componente                         | Qué hace                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | Middleware `AuditoriaHerramientas` | Intercepta cada llamada a una herramienta, mide su duración, convierte las excepciones en resultados controlados y registra el evento |
-| `outputs/agent-actions.jsonl` | Una línea por llamada: fecha, sesión, herramienta, argumentos y resultado enmascarados, código, error y duración |
-| `ModelCallLimitMiddleware` | Corta la conversación si se superan ocho llamadas al modelo en un mismo mensaje |
-| Panel de actividad en Gradio | Muestra en cada respuesta las herramientas ejecutadas, su código y, para el RAG, los candidatos y fragmentos |
-| Pruebas | 41 pruebas unitarias sin API y 12 pruebas de extremo a extremo contra Gemini |
+| `outputs/agent-actions.jsonl`      | Una línea por llamada: fecha, sesión, herramienta, argumentos y resultado enmascarados, código, error y duración                      |
+| `ModelCallLimitMiddleware`         | Corta la conversación si se superan ocho llamadas al modelo en un mismo mensaje                                                       |
+| Panel de actividad en Gradio       | Muestra en cada respuesta las herramientas ejecutadas, su código y, para el RAG, los candidatos y fragmentos                          |
+| Pruebas                            | 41 pruebas unitarias sin API y 12 pruebas de extremo a extremo contra Gemini                                                          |
 
 ### 3.2 Métricas y alertas propuestas
 
 Todas se pueden calcular a partir del log de acciones:
 
-| Métrica | Cálculo | Alerta |
-|---|---|---|
-| Tasa de devoluciones elegibles | `ELEGIBLE` / verificaciones | Variación de más de 20 % frente a la semana anterior (posible abuso o error de reglas) |
-| Tasa de derivación a personas | `REVISION_HUMANA` + `EXCEPCION_ECOMARKET` + `FUERA_DE_PLAZO` / verificaciones | Caída brusca: posible fallo en la detección del motivo (2.6) |
-| Reverificaciones por sesión | Verificaciones del mismo SKU en una sesión | Más de 2 en promedio: problemas de extracción de argumentos (2.2) |
-| Errores de herramienta | `ERROR_HERRAMIENTA` / llamadas | Más de 2 % en una hora |
-| Conversaciones cortadas por límite | Respuestas con `ok=false` | Cualquier aumento sostenido |
-| Intentos con autorización inválida | `AUTORIZACION_INVALIDA` | Cualquier ocurrencia (posible inyección, caso H) |
-| Acciones afirmadas sin evidencia | Respuestas con un número `DEV-` que no aparece en los eventos de la sesión | Cualquier ocurrencia (2.8) |
-| Latencia | Percentil 95 de `duracion_ms` por herramienta | RAG por encima de 60 s |
+| Métrica                            | Cálculo                                                                       | Alerta                                                                                 |
+| ---------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Tasa de devoluciones elegibles     | `ELEGIBLE` / verificaciones                                                   | Variación de más de 20 % frente a la semana anterior (posible abuso o error de reglas) |
+| Tasa de derivación a personas      | `REVISION_HUMANA` + `EXCEPCION_ECOMARKET` + `FUERA_DE_PLAZO` / verificaciones | Caída brusca: posible fallo en la detección del motivo (2.6)                           |
+| Reverificaciones por sesión        | Verificaciones del mismo SKU en una sesión                                    | Más de 2 en promedio: problemas de extracción de argumentos (2.2)                      |
+| Errores de herramienta             | `ERROR_HERRAMIENTA` / llamadas                                                | Más de 2 % en una hora                                                                 |
+| Conversaciones cortadas por límite | Respuestas con `ok=false`                                                     | Cualquier aumento sostenido                                                            |
+| Intentos con autorización inválida | `AUTORIZACION_INVALIDA`                                                       | Cualquier ocurrencia (posible inyección, caso H)                                       |
+| Acciones afirmadas sin evidencia   | Respuestas con un número `DEV-` que no aparece en los eventos de la sesión    | Cualquier ocurrencia (2.8)                                                             |
+| Latencia                           | Percentil 95 de `duracion_ms` por herramienta                                 | RAG por encima de 60 s                                                                 |
 
 Además proponemos revisar cada semana una muestra de conversaciones y comparar los argumentos de cada
 verificación con lo que el cliente escribió, y ejecutar la suite de extremo a extremo antes de
@@ -186,7 +186,7 @@ cualquier cambio de modelo, de prompt o de reglas.
 Con `HumanInTheLoopMiddleware` de LangChain el agente se detendría antes de ejecutar
 `generar_etiqueta_devolucion`; la interfaz mostraría el producto, el motivo y el punto de entrega,
 con los botones «Confirmar» y «Cancelar», y el agente continuaría con la decisión del cliente.
-El agente ya conserva su estado entre turnos con un *checkpointer*, que es lo que este middleware
+El agente ya conserva su estado entre turnos con un _checkpointer_, que es lo que este middleware
 necesita para pausar y reanudar. Es la mitigación directa del riesgo
 2.1 y la mejora que priorizaríamos.
 
